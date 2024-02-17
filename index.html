@@ -430,7 +430,7 @@
       clearInterval(fallInterval); // Stop the falling animation
       button.style.opacity = 0; // Fade out the button
       console.log('Button clicked! bonus:' + button.src);
-      window.Telegram.WebApp.HapticFeedback.impactOccurred("light")
+      window.Telegram.WebApp.HapticFeedback.impactOccurred("heavy")
       addBonus(button.src,button.getBoundingClientRect().x, button.getBoundingClientRect().y)
       button.src = "none"
       setTimeout(() => button.remove(), 2000); // Remove the button after it fades out
@@ -594,7 +594,13 @@ class GameSystem {
         if (isInsideCircle(touch.clientX, touch.clientY)) {
             if (game.energy < 1) return;
             visuals.clicked();
-            window.Telegram.WebApp.HapticFeedback.selectionChanged()
+            if(visuals.streak > 3){
+                window.Telegram.WebApp.HapticFeedback.impactOccurred("light")
+            }else{
+                window.Telegram.WebApp.HapticFeedback.selectionChanged()
+            }
+            //window.Telegram.WebApp.HapticFeedback.selectionChanged()
+           // window.Telegram.WebApp.HapticFeedback.impactOccurred("light")
             isCircleTouched = true;
             drawCircle();
 
