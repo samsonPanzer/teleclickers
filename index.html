@@ -149,7 +149,7 @@
     margin: 0;
     padding: 0;
     overflow: hidden; /* Prevents scrollbars from appearing */
-    /* touch-action: none; Prevents touch scrolling on supported browsers */
+    touch-action: none; /* Prevents touch scrolling on supported browsers */
     position: fixed; /* Prevents scrolling on iOS devices */
     width: 100%;
     height: 100%;
@@ -430,6 +430,7 @@
       clearInterval(fallInterval); // Stop the falling animation
       button.style.opacity = 0; // Fade out the button
       console.log('Button clicked! bonus:' + button.src);
+    
       addBonus(button.src,button.getBoundingClientRect().x, button.getBoundingClientRect().y)
       button.src = "none"
       setTimeout(() => button.remove(), 2000); // Remove the button after it fades out
@@ -873,9 +874,9 @@ document.addEventListener('contextmenu', function(event) {
 
 // Prevent scrolling on touch devices
 document.addEventListener('touchmove', function(event) {
-    // if (modal.style.display == "block") {} else {
-    //     event.preventDefault();
-    // }
+    if (modal.style.display == "block") {} else {
+        event.preventDefault();
+    }
 
 
 }, {
