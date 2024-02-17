@@ -277,7 +277,7 @@
     background-size: cover;
     display: none;
     opacity: 0;
-    z-index: 1000; /* Ensure it's above other content */
+    z-index: 50; /* Ensure it's above other content */
     transition: opacity 1s ease-in-out;
   }
 
@@ -641,7 +641,7 @@ class GameSystem {
             setTimeout(function() {
                 overlay.style.display = 'none';
             }, 1000); // Wait for fade-out to finish before hiding the element
-        }, 5000); // 5 seconds until fade-out starts
+        }, 3000); // 5 seconds until fade-out starts
     }
 }
 
