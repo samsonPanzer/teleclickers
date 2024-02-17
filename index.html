@@ -575,6 +575,7 @@ class GameSystem {
         var touch = event.touches[0];
         if (isInsideCircle(touch.clientX, touch.clientY)) {
             if (game.energy < 1) return;
+            visuals.clicked();
             window.Telegram.WebApp.HapticFeedback.selectionChanged()
             isCircleTouched = true;
             drawCircle();
@@ -590,7 +591,6 @@ class GameSystem {
             const text = "+" + multiplayerAdd; // The text to show
             createTextAtPosition(touch.clientX, touch.clientY, text);
             game.addScore()
-            visuals.clicked();
            // if(gif == undefined)this.showGif()
         }
        
@@ -655,36 +655,50 @@ class VisualFlare{
         this.secondsTillFirstFlare = 5;
         this.secondsTillSecondFlare = 60;
         this.firstFlareShow = false;
+        this.streak = 0;
     }
     update(){
         //return;
         let change = globalTime - this.lastPressed;
-        console.log(change)
-        if(change > 5000){
-            //hide gif
-            this.firstFlareShow = false;
-            setTimeout(function() {
-            overlay.style.opacity = 0;
-            setTimeout(function() {
-                overlay.style.display = 'none';
-            }, 100); // Wait for fade-out to finish before hiding the element
-        }, 1000); // 5 seconds until fade-out starts
+        //console.log(change)
 
+        if(change < 1000){
+            this.streak++;
         }else{
-            if(this.firstFlareShow){
-
-            }else{
-                this.firstFlareShow = true;
-                overlay.style.display = 'block';
-        setTimeout(function() {
-            overlay.style.opacity = 1;
-        }, 10); // Start the fade-in effect almost immediately
-            }
-            //if showing do nothing 
-
-            //if not showing - show
-            createTextAtPosition(250,250,"CLICKING LONGER")
+            this.streak = 0;
         }
+
+        if(this.streak > 3){
+            //console.log("ACTIVATE GIF")
+            game.showGif()
+        }
+
+
+        // if(change > 5000){
+        //     //hide gif
+        //     this.firstFlareShow = false;
+        //     setTimeout(function() {
+        //     overlay.style.opacity = 0;
+        //     setTimeout(function() {
+        //         overlay.style.display = 'none';
+        //     }, 100); // Wait for fade-out to finish before hiding the element
+        // }, 1000); // 5 seconds until fade-out starts
+
+        // }else{
+        //     if(this.firstFlareShow){
+
+        //     }else{
+        //         this.firstFlareShow = true;
+        //         overlay.style.display = 'block';
+        // setTimeout(function() {
+        //     overlay.style.opacity = 1;
+        // }, 10); // Start the fade-in effect almost immediately
+        //     }
+        //     //if showing do nothing 
+
+        //     //if not showing - show
+        //     createTextAtPosition(250,250,"CLICKING LONGER")
+        // }
 
 
     }
