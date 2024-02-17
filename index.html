@@ -160,7 +160,7 @@
   }
   #myCanvas {
     /* background-color: #092f46; */
-    background-image: radial-gradient(circle,#e2e2e2, #010c13);
+    background-image: radial-gradient(circle,#143f5b, #010c13);
     display: block; /* Removes the default margin */
   }
   #text{
@@ -446,11 +446,11 @@
     if(type == "bonus1"){
         const text = "BONUS"; // The text to show
         createTextAtPosition(x,y, text,100);
-        document.getElementById("gifOverlay").style.backgroundImage = "url('https://raw.githubusercontent.com/blackroks/nftCollection/main/images/parrot-party.gif')";
+       // document.getElementById("gifOverlay").style.backgroundImage = "url('https://raw.githubusercontent.com/blackroks/nftCollection/main/images/parrot-party.gif')";
         //multyplier
         game.multiplayer += 1;
         setTimeout(() => {
-            document.getElementById("gifOverlay").style.backgroundImage = "url('https://raw.githubusercontent.com/blackroks/nftCollection/main/images/spark1.gif')";
+         //   document.getElementById("gifOverlay").style.backgroundImage = "url('https://raw.githubusercontent.com/blackroks/nftCollection/main/images/spark1.gif')";
             game.multiplayer -= 1;
         }, 10000); // Remove the button after it fades out
     }else if(type == "bonus2"){
