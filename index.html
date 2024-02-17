@@ -292,11 +292,25 @@
     transition: opacity 2s;
     background: url('https://raw.githubusercontent.com/blackroks/nftCollection/main/images/bonusimg.png') center center no-repeat;
     background-size: contain;
-    z-index: 9;
+    z-index: 109;
+  }
+  .centered-text {
+    display: none; /* Initially set to none to hide the text */
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: white;
+    font-size: 2em; /* Adjust size as needed */
+    background-color: black;
+    font-family: Arial, sans-serif; /* Choose your preferred font */
+    z-index: 420;
   }
 </style>
 </head>
 <body>
+    <div id="message" class="centered-text">
+        Mobile devices are more fun!
+      </div>
 
 <div id="UIenergyBar">100/100</div>
 <div id="UIenergyBarEmpty">energy</div>
@@ -610,7 +624,6 @@ class GameSystem {
         // }
     }
     released(event) {
-        visuals.clicked();
         isCircleTouched = false;
         drawCircle();
         //prevent double tap zoom
@@ -934,6 +947,9 @@ let showEnergyBar = () => {
 //game loop
 var globalTime = Date.now();
 setInterval(() => {
+    if(!mobile){
+        false;
+    }
     globalTime = Date.now();
 
     if(Math.random() < 0.1){
@@ -961,9 +977,18 @@ window.requestAnimationFrame(step);
 }
 
 let mainButton;
-
+let mobile = true;
 // Initial call to set up the canvas
 addEventListener("load", (event) => {
+    if (!isMobileDevice()) {
+      document.getElementById('message').style.display = 'flex';
+      setTimeout(() => {
+    window.Telegram.WebApp.expand()
+}, 100);
+mobile = false;
+return;
+    }
+
     document.getElementById("scoreUI").style.marginTop = "70px"
 //viewportHeight
 // window.Telegram.WebApp.HapticFeedback
@@ -992,6 +1017,14 @@ setTimeout(() => {
     window.Telegram.WebApp.expand()
 }, 500);
 });
+
+
+
+function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+  };
+
+
     </script>
 
 </body>
