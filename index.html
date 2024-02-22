@@ -779,7 +779,7 @@ function resizeCanvas() {
     drawCircle();
 }
 
-let circlePaddingY = 100;
+let circlePaddingY = 0;
 
 // Function to draw the circle
 function drawCircle() {
@@ -888,9 +888,9 @@ document.addEventListener('touchmove', function(event) {
 
 let showEnergyBar = () => {
     ctx.clearRect(0,0, canvas.width, document.getElementById("scoreUI").getBoundingClientRect().top);
-    ctx.drawImage(image, 0, 256, 171, 86, 10,10, 64, 171);
+    ctx.drawImage(image, 0, 256, 171, 86, 10,10, 171, 86);
 
-    ctx.drawImage(image, 0, 256,  171, 86, canvas.width - 181 ,10, 64, 171);
+    ctx.drawImage(image, 0, 256,  171, 86, canvas.width - 181 ,10, 171, 86);
    // ctx.drawImage(image, 64, 256, 64, 64, window.innerWidth - 74,  10, 64, 50);
    // ctx.drawImage(image, 171, 256, 16, 64, 74,  10, window.innerWidth - 144, 50);
     //dynamic bar
