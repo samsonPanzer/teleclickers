@@ -742,7 +742,7 @@ const visuals = new VisualFlare()
 
 //load images
 //coin image
-const imageUrl = 'https://raw.githubusercontent.com/blackroks/nftCollection/main/images/coinpng.png';
+const imageUrl = 'https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/clickerSheet.png';
 // Create a new image object
 const image = new Image();
 // Set the crossOrigin to anonymous to avoid any cross-origin issues
@@ -784,7 +784,8 @@ let circlePaddingY = 100;
 // Function to draw the circle
 function drawCircle() {
     // Clear the canvas
-    ctx.clearRect(0, 0, canvas.width, (centerY - (window.innerWidth / 3)) + ((window.innerWidth / 3) * 2));
+    //ctx.clearRect(0, 0, canvas.width, (centerY - (window.innerWidth / 3)) + ((window.innerWidth / 3) * 2));
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (isCircleTouched) {
         ctx.drawImage(image, 256, 0, 256, 256, centerX - (window.innerWidth / 3), circlePaddingY+(centerY - (window.innerWidth / 3)), (window.innerWidth / 3) * 2, (window.innerWidth / 3) * 2);
     } else {
@@ -887,9 +888,11 @@ document.addEventListener('touchmove', function(event) {
 
 let showEnergyBar = () => {
     ctx.clearRect(0,0, canvas.width, document.getElementById("scoreUI").getBoundingClientRect().top);
-    ctx.drawImage(image, 0, 256, 64, 64, 10,10, 64, 50);
-    ctx.drawImage(image, 64, 256, 64, 64, window.innerWidth - 74,  10, 64, 50);
-    ctx.drawImage(image, 171, 256, 16, 64, 74,  10, window.innerWidth - 144, 50);
+    ctx.drawImage(image, 0, 256, 64, 171, 10,10, 64, 171);
+
+    ctx.drawImage(image, 0, 256, 64, 171, canvas.width - 181 ,10, 64, 171);
+   // ctx.drawImage(image, 64, 256, 64, 64, window.innerWidth - 74,  10, 64, 50);
+   // ctx.drawImage(image, 171, 256, 16, 64, 74,  10, window.innerWidth - 144, 50);
     //dynamic bar
     let percerageBar = game.energy / game.maxEnergy;
 
