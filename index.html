@@ -35,6 +35,26 @@
         /* width: 30%; */
         border-radius: 2px; /* Optional: for rounded corners */
     }
+    .button-containerTop {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    background-color: transparent; /* Light grey background */
+    top: 0;
+  }
+  .button-containerTop button {
+    width: 120px; /* Square buttons */
+    height: 60px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px; /* Optional: for rounded corners */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  background-size: 100% 100%; /* Scale the image to be as large as possible, aspect ratio is preserved */
+  background-position: center; /* Center the image within the button */
+  }
   .button-container {
     position: absolute;
     width: 100%;
@@ -53,7 +73,6 @@
     border-radius: 5px; /* Optional: for rounded corners */
   background-repeat: no-repeat; /* Prevent the image from repeating */
   background-size: 100% 100%; /* Scale the image to be as large as possible, aspect ratio is preserved */
-  background: url(https://raw.githubusercontent.com/blackroks/nftCollection/main/images/miner.gif);
   background-position: center; /* Center the image within the button */
   }
     /* The Modal (background) */
@@ -366,6 +385,13 @@
 </div>
 <h1 id="scoreUI"> SCORE </h1>
 <canvas id="myCanvas"></canvas>
+
+<div class="button-containerTop" id="buttonsMainPageUI">
+    <img src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/topInfo.png" alt="">
+    <img src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/topInfo.png" alt="">
+    
+  </div> 
+
 
 <div class="button-container" id="buttonsMainPageUI">
     <img src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/inventory.png" alt="">
