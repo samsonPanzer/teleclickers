@@ -327,6 +327,47 @@
 </style>
 </head>
 <body>
+    <button onclick="sendMessageToBot('hello')">Click me</button>
+
+<script>
+
+
+// This function sends a message to the bot from the Web App
+function sendMessageToBot(message) {
+  // Retrieve the bot token from the init data provided by Telegram
+  const botToken = Telegram.WebApp.initData.bot_token;
+  
+  // Prepare the API endpoint with the temporary bot token
+  const apiEndpoint = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+  // Prepare the payload with the chat ID and the message
+  const payload = {
+    chat_id: Telegram.WebApp.initData.user.id,
+    text: message
+  };
+
+  // Use fetch or another method to send the data to the bot
+  fetch(apiEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Message sent to bot:', data);
+  })
+  .catch(error => {
+    console.error('Error sending message to bot:', error);
+  });
+}
+
+// Example usage
+sendMessageToBot('Hello from the Web App!');
+
+</script>
+
     <div id="message" class="centered-text">
         Mobile devices are more fun!
       </div>
@@ -387,8 +428,8 @@
 <canvas id="myCanvas"></canvas>
 
 <div class="button-containerTop" id="buttonsMainPageUI">
-    <img src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/topInfo.png" alt="">
-    <img src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/topInfo.png" alt="">
+    <!-- <img src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/topInfo.png" alt="">
+    <img src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/topInfo.png" alt=""> -->
     
   </div> 
 
