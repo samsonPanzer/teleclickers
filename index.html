@@ -366,12 +366,13 @@ function sendMessageToBot(message) {
     console.log('Message sent to bot:', data);
   })
   .catch(error => {
+    alert(`Error sending message: ${error.message}`);
     console.error('Error sending message to bot:', error);
   });
 }
 
 // Example usage
-sendMessageToBot('Hello from the Web App!');
+//sendMessageToBot('Hello from the Web App!');
 
 </script>
 
