@@ -324,16 +324,23 @@
     font-family: Arial, sans-serif; /* Choose your preferred font */
     z-index: 420;
   }
+  #test{
+    height: 500px;
+    width: 500px;
+    color: green;
+    z-index: 10000;
+  }
 </style>
 </head>
 <body>
-    <button onclick="sendMessageToBot('hello')">Click me</button>
+    <button id="test" onclick="sendMessageToBot('hello')">Click me</button>
 
 <script>
 
 
 // This function sends a message to the bot from the Web App
 function sendMessageToBot(message) {
+    console.log("clicked!")
   // Retrieve the bot token from the init data provided by Telegram
   const botToken = Telegram.WebApp.initData.bot_token;
   
