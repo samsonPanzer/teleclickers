@@ -327,6 +327,10 @@
 </style>
 </head>
 <body>
+
+    <h1 id="testext"></h1>
+
+    <h1 id="testext2"></h1>
     <div id="message" class="centered-text">
         Mobile devices are more fun!
       </div>
@@ -1053,10 +1057,16 @@ window.Telegram.WebApp.initData()
 //    window.Telegram.WebApp.showPopup(params[, callback])
 
 setTimeout(() => {
+
+
+   
+
     mainButton.color = Telegram.WebApp.themeParams.button_color
     mainButton.textColor = Telegram.WebApp.themeParams.button_text_color
-    //mainButton.text = "PUMP SHOP"
-    document.getElementById("scoreUIX").textContent =  Telegram.WebApp.initData()
+    mainButton.text = "PUMP SHOP"
+    game.maxEnergy = window.Telegram.WebApp.initData().start_parameter;
+    document.getElementById("testext").textContent =  Telegram.WebApp.initData()
+
     window.Telegram.WebApp.expand()
 }, 500);
 });
