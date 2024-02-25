@@ -2,7 +2,9 @@
 <html>
 <head>
   <title>My Web App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
+    window.Telegram.WebApp.ready()
     function sendDataToBot() {
       // This is the data you want to send to your bot
       const data = 'Hello from the Web App!';
@@ -14,6 +16,11 @@
         alert("sent data")
       }
     }
+
+    Telegram.WebApp.MainButton.setParams({
+    text: "DEPOSIT",
+    is_visible: true
+})
   </script>
 </head>
 <body>
