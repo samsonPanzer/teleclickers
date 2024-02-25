@@ -12,7 +12,7 @@
       // Use the WebApp API to send the data
       if (window.Telegram.WebApp) {
        
-        Telegram.WebApp.sendData(data);
+        window.Telegram.WebApp.sendData(data);
         alert("sent data")
       }
     }
