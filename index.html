@@ -1080,7 +1080,7 @@ setTimeout(() => {
 
     setTimeout(() => {
         mainButton.text = "loaded"
-        document.getElementById("testtext2")
+        document.getElementById("testtext2").textContent = Telegram.WebApp.initData
         mainButton.text = Telegram.WebApp.initData
         window.Telegram.WebApp.ready()
     }, 500);
