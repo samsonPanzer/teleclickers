@@ -328,9 +328,9 @@
 </head>
 <body>
 
-    <h1 id="testext"></h1>
+    <h1 id="testext">test test</h1>
 
-    <h1 id="testext2"></h1>
+    <h1 id="testext2">Hello welocme</h1>
     <div id="message" class="centered-text">
         Mobile devices are more fun!
       </div>
@@ -1068,7 +1068,16 @@ setTimeout(() => {
    // document.getElementById("testext").textContent =  Telegram.WebApp.initData()
 
     window.Telegram.WebApp.expand()
-    window.Telegram.WebApp.ready()
+
+
+    setTimeout(() => {
+        mainButton.text = "loaded"
+        mainButton.text = Telegram.WebApp.initData().toString()
+        window.Telegram.WebApp.ready()
+    }, 500);
+   
+
+
 }, 500);
 });
 
