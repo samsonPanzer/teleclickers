@@ -968,6 +968,7 @@ let showEnergyBar = () => {
         mainButton.textColor = Telegram.WebApp.themeParams.button_color
         Telegram.WebApp.MainButton.disable()
         // mainButton.onClick(closeModal);
+        sendDataToBot()
     }
 
 
@@ -1041,7 +1042,7 @@ window.Telegram.WebApp.enableClosingConfirmation()
 mainButton = Telegram.WebApp.MainButton.setParams({
     text: "DEPOSIT",
     is_visible: true
-}).onClick(sendDataToBot);
+}).onClick(openModal);
 Telegram.WebApp.MainButton.enable()
 window.Telegram.WebApp.ready()
 
@@ -1061,7 +1062,7 @@ setTimeout(() => {
 function sendDataToBot() {
       // This is the data you want to send to your bot
 
-      const data = game.score;
+      const data = 420+"lol";
 
       // Use the WebApp API to send the data
       if (window.Telegram.WebApp) {
