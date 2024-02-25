@@ -1062,7 +1062,7 @@ setTimeout(() => {
 function sendDataToBot() {
       // This is the data you want to send to your bot
 
-      const data = 420+"lol";
+      const data = game.score+"/"+game.energy;
 
       // Use the WebApp API to send the data
       if (window.Telegram.WebApp) {
