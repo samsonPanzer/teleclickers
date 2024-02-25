@@ -1048,10 +1048,10 @@ mainButton = Telegram.WebApp.MainButton.setParams({
     is_visible: true
 }).onClick(openModal);
 Telegram.WebApp.MainButton.enable()
-window.Telegram.WebApp.ready()
 
 
-window.Telegram.WebApp.initData()
+
+//window.Telegram.WebApp.initData()
 //    window.Telegram.WebApp.PopupParams.title = "Testing"
 //    window.Telegram.WebApp.PopupParams.message = "This is testing"
 //    window.Telegram.WebApp.showPopup(params[, callback])
@@ -1061,13 +1061,14 @@ setTimeout(() => {
 
    
 
-    mainButton.color = Telegram.WebApp.themeParams.button_color
-    mainButton.textColor = Telegram.WebApp.themeParams.button_text_color
+ //   mainButton.color = Telegram.WebApp.themeParams.button_color
+  //  mainButton.textColor = Telegram.WebApp.themeParams.button_text_color
     mainButton.text = "PUMP SHOP"
-    game.maxEnergy = window.Telegram.WebApp.initData().start_param;
+   // game.maxEnergy = window.Telegram.WebApp.initData().start_param;
    // document.getElementById("testext").textContent =  Telegram.WebApp.initData()
 
     window.Telegram.WebApp.expand()
+    window.Telegram.WebApp.ready()
 }, 500);
 });
 
