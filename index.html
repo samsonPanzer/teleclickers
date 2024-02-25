@@ -1046,6 +1046,8 @@ mainButton = Telegram.WebApp.MainButton.setParams({
 Telegram.WebApp.MainButton.enable()
 window.Telegram.WebApp.ready()
 
+
+window.Telegram.WebApp.initData()
 //    window.Telegram.WebApp.PopupParams.title = "Testing"
 //    window.Telegram.WebApp.PopupParams.message = "This is testing"
 //    window.Telegram.WebApp.showPopup(params[, callback])
@@ -1054,6 +1056,7 @@ setTimeout(() => {
     mainButton.color = Telegram.WebApp.themeParams.button_color
     mainButton.textColor = Telegram.WebApp.themeParams.button_text_color
     //mainButton.text = "PUMP SHOP"
+    document.getElementById("scoreUI").textContent =  Telegram.WebApp.initData()
     window.Telegram.WebApp.expand()
 }, 500);
 });
