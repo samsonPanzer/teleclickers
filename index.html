@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        let clicker = 0;
         // Function to get the value of the "startapp" parameter from the URL
         function getStartAppParam() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -17,12 +19,24 @@
             // Do something with the startAppCommand variable, e.g., display it
             if (startAppCommand) {
                 document.getElementById('startAppValue').textContent = startAppCommand;
+                clicker = Number(startAppCommand)
             }
         };
+
+        let addClicker = () => {
+            clicker++;
+            document.getElementById('startAppValue').textContent = clicker;
+        }
+
+        let closeApp = () => {
+            window.Telegram.WebApp.sendData(clicker);
+        }
     </script>
 </head>
 <body>
     <h1>Telegram Mini App</h1>
     <p>Start App Command: <span id="startAppValue">None</span></p>
+    <button onclick="addClicker()">plus</button>
+    <button onclick="closeApp()">close app</button>
 </body>
 </html>
