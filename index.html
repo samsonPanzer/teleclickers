@@ -36,7 +36,7 @@
 
         let closeApp = () => {
             if (window.Telegram.WebApp) {
-       let data =  Number(clicker)
+       let data =  JSON.stringify(clicker)
        window.Telegram.WebApp.sendData(data);
       // alert("sent data")
      }
