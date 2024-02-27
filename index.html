@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Telegram Mini App</title>
     <style>
+        body{
+            background-color: aliceblue;
+            color: black;
+        }
         button{
             width: 100px;
             height: 100px;
@@ -36,6 +40,7 @@
 
         let closeApp = () => {
             if (window.Telegram.WebApp) {
+        if(clicker == null )clicker = 0        
        let data =  JSON.stringify(clicker)
        window.Telegram.WebApp.sendData(data);
       // alert("sent data")
