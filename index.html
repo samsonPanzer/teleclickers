@@ -13,6 +13,7 @@
 </style>
 </head>
 <body>
+    <h1 id="speed"></h1>
 <canvas id="spinnerCanvas"></canvas>
 
 <script>
@@ -30,7 +31,7 @@
   let lastY = centerY;
   let spinningSpeed = 0;
   let isInteracting = false;
-  let friction = 0.99
+  let friction = 0.95
   function drawSpinner(ctx, angle) {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
 
@@ -56,6 +57,7 @@
     drawSpinner(ctx, angle);
     // Slow down the spinner over time
     spinningSpeed *= friction;
+    document.getElementById("speed").innerText = Math.abs(spinningSpeed).toFixed(3)
     requestAnimationFrame(animate);
   }
 
