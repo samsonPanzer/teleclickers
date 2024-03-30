@@ -122,9 +122,9 @@
   });
 
   canvas.addEventListener('touchmove', function(e) {
-    if (isInsideCircle(touch.clientX, touch.clientY)) {
-      return
-    }
+    // if (isInsideCircle(touch.clientX, touch.clientY)) {
+    //   return
+    // }
     e.preventDefault(); // Prevent scrolling when touching the canvas
     const touchPos = getTouchPos(e);
     moveInteraction(touchPos.x, touchPos.y);
