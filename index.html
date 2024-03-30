@@ -94,20 +94,20 @@
     };
   }
 
-  canvas.addEventListener('mousedown', function(e) {
-    const rect = canvas.getBoundingClientRect();
-    startInteraction(e.clientX - rect.left, e.clientY - rect.top);
-  });
+  // canvas.addEventListener('mousedown', function(e) {
+  //   const rect = canvas.getBoundingClientRect();
+  //   startInteraction(e.clientX - rect.left, e.clientY - rect.top);
+  // });
 
-  canvas.addEventListener('mousemove', function(e) {
-    if (isInteracting) {
-      const rect = canvas.getBoundingClientRect();
-      moveInteraction(e.clientX - rect.left, e.clientY - rect.top);
-    }
-  });
+  // canvas.addEventListener('mousemove', function(e) {
+  //   if (isInteracting) {
+  //     const rect = canvas.getBoundingClientRect();
+  //     moveInteraction(e.clientX - rect.left, e.clientY - rect.top);
+  //   }
+  // });
 
-  canvas.addEventListener('mouseup', endInteraction);
-  canvas.addEventListener('mouseleave', endInteraction);
+  // canvas.addEventListener('mouseup', endInteraction);
+  // canvas.addEventListener('mouseleave', endInteraction);
 
   // Touch event listeners
   canvas.addEventListener('touchstart', function(e) {
