@@ -108,15 +108,23 @@
 
   // canvas.addEventListener('mouseup', endInteraction);
   // canvas.addEventListener('mouseleave', endInteraction);
-
+  var centerX, centerY, radius = window.innerWidth / 3; // Circle properties
   // Touch event listeners
   canvas.addEventListener('touchstart', function(e) {
+
+    if (isInsideCircle(touch.clientX, touch.clientY)) {
+      return
+    }
+
     e.preventDefault(); // Prevent scrolling when touching the canvas
     const touchPos = getTouchPos(e);
     startInteraction(touchPos.x, touchPos.y);
   });
 
   canvas.addEventListener('touchmove', function(e) {
+    if (isInsideCircle(touch.clientX, touch.clientY)) {
+      return
+    }
     e.preventDefault(); // Prevent scrolling when touching the canvas
     const touchPos = getTouchPos(e);
     moveInteraction(touchPos.x, touchPos.y);
@@ -124,6 +132,14 @@
 
   canvas.addEventListener('touchend', endInteraction);
   canvas.addEventListener('touchcancel', endInteraction);
+
+// Function to check if the touch point is inside the circle
+function isInsideCircle(touchX, touchY) {
+    var dx = touchX - centerX;
+    var dy = touchY - (circlePaddingY+centerY);
+    return dx * dx + dy * dy <= radius * radius;
+}
+
 
   // Start the animation loop
   //animate();
