@@ -10,6 +10,10 @@
     margin: auto;
     background-color: transparent;
     position: absolute;
+    background-image: radial-gradient(circle,#143f5b, #010c13);
+  }
+  body{
+    /* background-image: radial-gradient(circle,#143f5b, #010c13); */
   }
 </style>
 </head>
@@ -18,6 +22,9 @@
 <canvas id="spinnerCanvas"></canvas>
 
 <script>
+
+
+
   const canvas = document.getElementById('spinnerCanvas');
   canvas.style.width = window.innerWidth + "px"
   canvas.style.height = window.innerWidth + "px"
@@ -33,6 +40,8 @@
   let spinningSpeed = 0;
   let isInteracting = false;
   let friction = 0.98
+  const clickerImage = new Image();
+  clickerImage.src = "https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png"
   const spinnerImage = new Image();
   spinnerImage.src = 'https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidget.png'; // Replace with your image URL
   spinnerImage.onload = animate; // Start the animation after the image loads
@@ -44,7 +53,15 @@
     spinctx.rotate(angle); // Rotate the canvas
     // Draw the image spincentered on the canvas
     spinctx.drawImage(spinnerImage, -spinnerImage.width / 2, -spinnerImage.height / 2);
+    
     spinctx.restore();
+
+    spinctx.save();
+    spinctx.translate(spincenterX, spincenterY); // Move to the spincenter of the canvas
+    spinctx.drawImage(clickerImage, -spinnerImage.width / 2, -spinnerImage.height / 2);
+    spinctx.restore();
+
+
   }
 
   function animate() {
@@ -94,21 +111,25 @@
     };
   }
 
-  // canvas.addEventListener('mousedown', function(e) {
-  //   const rect = canvas.getBoundingClientRect();
-  //   startInteraction(e.clientX - rect.left, e.clientY - rect.top);
-  // });
+  canvas.addEventListener('mousedown', function(e) {
+    if(isInsideCircle(e.clientX,e.clientY)){
+      console.log("clicked a button")
+    }else{
+      console.log("not")
+    }
+    const rect = canvas.getBoundingClientRect();
+    startInteraction(e.clientX - rect.left, e.clientY - rect.top);
+  });
 
-  // canvas.addEventListener('mousemove', function(e) {
-  //   if (isInteracting) {
-  //     const rect = canvas.getBoundingClientRect();
-  //     moveInteraction(e.clientX - rect.left, e.clientY - rect.top);
-  //   }
-  // });
+  canvas.addEventListener('mousemove', function(e) {
+    if (isInteracting) {
+      const rect = canvas.getBoundingClientRect();
+      moveInteraction(e.clientX - rect.left, e.clientY - rect.top);
+    }
+  });
 
-  // canvas.addEventListener('mouseup', endInteraction);
-  // canvas.addEventListener('mouseleave', endInteraction);
-  var centerX, centerY, radius = window.innerWidth / 10; // Circle properties
+  canvas.addEventListener('mouseup', endInteraction);
+  canvas.addEventListener('mouseleave', endInteraction);
   // Touch event listeners
   canvas.addEventListener('touchstart', function(e) {
 
@@ -132,9 +153,13 @@
 
   canvas.addEventListener('touchend', endInteraction);
   canvas.addEventListener('touchcancel', endInteraction);
-
+  var centerX = 350; 
+  var centerY = 420; 
+  var radius = 100; // Circle properties
+  let circlePaddingY = 0;
 // Function to check if the touch point is inside the circle
 function isInsideCircle(touchX, touchY) {
+  console.log(touchX, touchY, centerX , centerY, radius)
     var dx = touchX - centerX;
     var dy = touchY - (circlePaddingY+centerY);
     return dx * dx + dy * dy <= radius * radius;
