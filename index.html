@@ -15,10 +15,16 @@
   body{
     /* background-image: radial-gradient(circle,#143f5b, #010c13); */
   }
+  #buttonDiv{
+    height: 300px;
+    width: 100%;
+    border: #010c13 solid;
+  }
 </style>
 </head>
 <body>
     <h1 id="speed"></h1>
+    <div id="buttonDiv">click me</div>
 <canvas id="spinnerCanvas"></canvas>
 
 <script>
@@ -32,37 +38,54 @@
   canvas.height = window.innerWidth 
   const spinctx = canvas.getContext('2d');
   let angle = 0;
-  const spincenterX = canvas.width / 2;
-  const spincenterY = canvas.height / 2;
-  const spinnerRadius = canvas.width/2
+  let spincenterX = canvas.width / 2;
+let spincenterY = canvas.height / 2;
+let spinnerRadius = canvas.width / 2;
   let lastX = spincenterX;
   let lastY = spincenterY;
   let spinningSpeed = 0;
   let isInteracting = false;
   let friction = 0.98
   const clickerImage = new Image();
-  clickerImage.src = "https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png"
+  //clickerImage.src = "https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png"
   const spinnerImage = new Image();
   spinnerImage.src = 'https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidget.png'; // Replace with your image URL
   spinnerImage.onload = animate; // Start the animation after the image loads
 
-  function drawSpinner(spinctx, angle) {
-    spinctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-    spinctx.save();
-    spinctx.translate(spincenterX, spincenterY); // Move to the spincenter of the canvas
-    spinctx.rotate(angle); // Rotate the canvas
-    // Draw the image spincentered on the canvas
-    spinctx.drawImage(spinnerImage, -spinnerImage.width / 2, -spinnerImage.height / 2);
-    
-    spinctx.restore();
+  // Load the non-spinning image
+const topImage = new Image();
+topImage.src = "https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png";
 
-    spinctx.save();
-    spinctx.translate(spincenterX, spincenterY); // Move to the spincenter of the canvas
-    spinctx.drawImage(clickerImage, -spinnerImage.width / 2, -spinnerImage.height / 2);
-    spinctx.restore();
+// Ensure the non-spinning image is loaded before starting the animation
+topImage.onload = function() {
+  // Now that the image is loaded, you can start the animation
+  animate();
+};
+
+function drawSpinner(spinctx, angle) {
+
+  const spinnerWidth = canvas.width * 0.95; // Scale the spinner to 80% of the canvas width
+const spinnerHeight = spinnerWidth; // Keep the spinner aspect ratio
+
+  spinctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+  
+  spinctx.drawImage(topImage, 0,0, canvas.width,canvas.height);
+  // Draw the spinning image
+  spinctx.save();
+  spinctx.translate(spincenterX, spincenterY); // Move to the center of the canvas
+  spinctx.rotate(angle); // Rotate the canvas
+  // Calculate the new size for the spinner image
 
 
-  }
+// Draw the image centered on the canvas and scaled to spinnerWidth and spinnerHeight
+spinctx.drawImage(spinnerImage, -spinnerWidth / 2, -spinnerHeight / 2, spinnerWidth, spinnerHeight);
+  spinctx.restore();
+
+  // Draw the non-spinning image on top of the spinning image
+  // The non-spinning image is drawn after restoring the context, so it's not affected by the rotation
+ 
+}
+
 
   function animate() {
     angle += spinningSpeed;
@@ -165,6 +188,32 @@ function isInsideCircle(touchX, touchY) {
     return dx * dx + dy * dy <= radius * radius;
 }
 
+
+
+ // Function to resize the spinner and adjust spin properties
+function resizeSpinner(newSize, newFriction) {
+  // Update the spinner size
+  canvas.style.width = newSize + "px";
+  canvas.style.height = newSize + "px";
+  canvas.width = newSize;
+  canvas.height = newSize;
+
+  // Update the spinner's center position
+  spincenterX = canvas.width / 2;
+  spincenterY = canvas.height / 2;
+
+  // Update the spinner radius
+  spinnerRadius = canvas.width / 2;
+
+  // Update the friction to change spin properties
+  friction = newFriction;
+
+  // Redraw the spinner with the new size
+  drawSpinner(spinctx, angle);
+}
+
+// Example usage: resize the spinner to 300x300 pixels with a friction of 0.95
+resizeSpinner( window.innerWidth, 0.999);
 
   // Start the animation loop
   //animate();
