@@ -3,220 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fidget Spinner</title>
+<title>Canvas Layout</title>
 <style>
- #spinnerCanvas{
-    display: block;
-    margin: auto;
-    background-color: transparent;
-    position: absolute;
-    background-image: radial-gradient(circle,#143f5b, #010c13);
-  }
-  body{
-    /* background-image: radial-gradient(circle,#143f5b, #010c13); */
-  }
-  #buttonDiv{
-    height: 300px;
-    width: 100%;
-    border: #010c13 solid;
-  }
+.parent {
+display: grid;
+grid-template-columns: repeat(4, 25%);
+grid-template-rows: repeat(5, 20%);
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+
+
+.div1 {
+     grid-area: 3 / 1 / 6 / 5; }
+.div2 {
+     grid-area: 1 / 2 / 3 / 5; }
+.div3 {
+     grid-area: 1 / 1 / 3 / 2; }
+
+     canvas{
+        background-color: aquamarine;
+        width: 100%;
+        height: 100%;
+     }
 </style>
 </head>
 <body>
-    <h1 id="speed"></h1>
-    <div id="buttonDiv">click me</div>
-<canvas id="spinnerCanvas"></canvas>
 
+    <div class="parent">
+        <div class="div1">
+            <canvas></canvas>    
+        </div>
+        <div class="div2">
+            <canvas></canvas>    
+        </div>
+        <div class="div3">
+            <button>hello</button>  
+            <button>hello</button>    
+        </div>
+        </div>
 <script>
-
-
-
-  const canvas = document.getElementById('spinnerCanvas');
-  canvas.style.width = window.innerWidth + "px"
-  canvas.style.height = window.innerWidth + "px"
-  canvas.width = window.innerWidth 
-  canvas.height = window.innerWidth 
-  const spinctx = canvas.getContext('2d');
-  let angle = 0;
-  let spincenterX = canvas.width / 2;
-let spincenterY = canvas.height / 2;
-let spinnerRadius = canvas.width / 2;
-  let lastX = spincenterX;
-  let lastY = spincenterY;
-  let spinningSpeed = 0;
-  let isInteracting = false;
-  let friction = 0.98
-  const clickerImage = new Image();
-  //clickerImage.src = "https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png"
-  const spinnerImage = new Image();
-  spinnerImage.src = 'https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidget.png'; // Replace with your image URL
-  spinnerImage.onload = animate; // Start the animation after the image loads
-
-  // Load the non-spinning image
-const topImage = new Image();
-topImage.src = "https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png";
-
-// Ensure the non-spinning image is loaded before starting the animation
-topImage.onload = function() {
-  // Now that the image is loaded, you can start the animation
-  animate();
-};
-
-function drawSpinner(spinctx, angle) {
-
-  const spinnerWidth = canvas.width * 0.95; // Scale the spinner to 80% of the canvas width
-const spinnerHeight = spinnerWidth; // Keep the spinner aspect ratio
-
-  spinctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-  
-  spinctx.drawImage(topImage, 0,0, canvas.width,canvas.height);
-  // Draw the spinning image
-  spinctx.save();
-  spinctx.translate(spincenterX, spincenterY); // Move to the center of the canvas
-  spinctx.rotate(angle); // Rotate the canvas
-  // Calculate the new size for the spinner image
-
-
-// Draw the image centered on the canvas and scaled to spinnerWidth and spinnerHeight
-spinctx.drawImage(spinnerImage, -spinnerWidth / 2, -spinnerHeight / 2, spinnerWidth, spinnerHeight);
-  spinctx.restore();
-
-  // Draw the non-spinning image on top of the spinning image
-  // The non-spinning image is drawn after restoring the context, so it's not affected by the rotation
- 
-}
-
-
-  function animate() {
-    angle += spinningSpeed;
-    drawSpinner(spinctx, angle);
-    // Slow down the spinner over time
-    spinningSpeed *= friction;
-    document.getElementById("speed").innerText = Math.abs(spinningSpeed).toFixed(3)
-    requestAnimationFrame(animate);
-  }
-
-  function getAngle(cx, cy, ex, ey) {
-    const dy = ey - cy;
-    const dx = ex - cx;
-    const theta = Math.atan2(dy, dx);
-    return theta;
-  }
-
-  function startInteraction(x, y) {
-    isInteracting = true;
-    lastX = x;
-    lastY = y;
-  }
-
-  function moveInteraction(x, y) {
-    if (isInteracting) {
-      const newAngle = getAngle(spincenterX, spincenterY, x, y);
-      const oldAngle = getAngle(spincenterX, spincenterY, lastX, lastY);
-      const angleDifference = newAngle - oldAngle;
-
-      // Use the angle difference to set the spinning speed
-      spinningSpeed = angleDifference;
-      lastX = x;
-      lastY = y;
-    }
-  }
-
-  function endInteraction() {
-    isInteracting = false;
-  }
-
-  function getTouchPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    return {
-      x: e.touches[0].clientX - rect.left,
-      y: e.touches[0].clientY - rect.top
-    };
-  }
-
-  canvas.addEventListener('mousedown', function(e) {
-    if(isInsideCircle(e.clientX,e.clientY)){
-      console.log("clicked a button")
-    }else{
-      console.log("not")
-    }
-    const rect = canvas.getBoundingClientRect();
-    startInteraction(e.clientX - rect.left, e.clientY - rect.top);
-  });
-
-  canvas.addEventListener('mousemove', function(e) {
-    if (isInteracting) {
-      const rect = canvas.getBoundingClientRect();
-      moveInteraction(e.clientX - rect.left, e.clientY - rect.top);
-    }
-  });
-
-  canvas.addEventListener('mouseup', endInteraction);
-  canvas.addEventListener('mouseleave', endInteraction);
-  // Touch event listeners
-  canvas.addEventListener('touchstart', function(e) {
-
-    // if (isInsideCircle(touch.clientX, touch.clientY)) {
-    //   return
-    // }
-
-    e.preventDefault(); // Prevent scrolling when touching the canvas
-    const touchPos = getTouchPos(e);
-    startInteraction(touchPos.x, touchPos.y);
-  });
-
-  canvas.addEventListener('touchmove', function(e) {
-    // if (isInsideCircle(touch.clientX, touch.clientY)) {
-    //   return
-    // }
-    e.preventDefault(); // Prevent scrolling when touching the canvas
-    const touchPos = getTouchPos(e);
-    moveInteraction(touchPos.x, touchPos.y);
-  });
-
-  canvas.addEventListener('touchend', endInteraction);
-  canvas.addEventListener('touchcancel', endInteraction);
-  var centerX = 350; 
-  var centerY = 420; 
-  var radius = 100; // Circle properties
-  let circlePaddingY = 0;
-// Function to check if the touch point is inside the circle
-function isInsideCircle(touchX, touchY) {
-  console.log(touchX, touchY, centerX , centerY, radius)
-    var dx = touchX - centerX;
-    var dy = touchY - (circlePaddingY+centerY);
-    return dx * dx + dy * dy <= radius * radius;
-}
-
-
-
- // Function to resize the spinner and adjust spin properties
-function resizeSpinner(newSize, newFriction) {
-  // Update the spinner size
-  canvas.style.width = newSize + "px";
-  canvas.style.height = newSize + "px";
-  canvas.width = newSize;
-  canvas.height = newSize;
-
-  // Update the spinner's center position
-  spincenterX = canvas.width / 2;
-  spincenterY = canvas.height / 2;
-
-  // Update the spinner radius
-  spinnerRadius = canvas.width / 2;
-
-  // Update the friction to change spin properties
-  friction = newFriction;
-
-  // Redraw the spinner with the new size
-  drawSpinner(spinctx, angle);
-}
-
-// Example usage: resize the spinner to 300x300 pixels with a friction of 0.95
-resizeSpinner( window.innerWidth, 0.999);
-
-  // Start the animation loop
-  //animate();
+  // You can add your JavaScript here to manipulate the canvases
 </script>
+
 </body>
 </html>
