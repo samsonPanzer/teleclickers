@@ -58,15 +58,8 @@
                 const canvasAspectRatio = canvas.width / canvas.height;
                 let imageWidth, imageHeight;
 
-                // Determine whether to fit the image to width or height
-                if (imageAspectRatio < canvasAspectRatio) {
-                    imageHeight = canvas.height;
-                    imageWidth = imageHeight * imageAspectRatio;
-                } else {
-                    imageWidth = canvas.width;
-                    imageHeight = imageWidth / imageAspectRatio;
-                }
-
+                imageHeight = canvas.height* imageAspectRatio;
+                imageWidth = imageHeight * imageAspectRatio;
                 // Calculate the position to center the image on the canvas
                 const x = (canvas.width - imageWidth) / 2;
                 const y = (canvas.height - imageHeight) / 2;
