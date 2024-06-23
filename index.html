@@ -62,9 +62,9 @@
                 if (spinning) {
                     rotation += speed;
                     fan.style.transform = `rotate(${rotation}deg)`;
-                    speed *= 0.99;
+                    speed *= 0.99; // Slower deceleration
 
-                    if (Math.abs(speed) > 0.01) {
+                    if (Math.abs(speed) > 0.1) {
                         requestAnimationFrame(spinFan);
                     } else {
                         spinning = false;
@@ -94,8 +94,8 @@
                 if (angleDiff > 180) angleDiff -= 360;
                 if (angleDiff < -180) angleDiff += 360;
 
-                speed = angleDiff * 0.5;
-                speed = Math.min(Math.max(speed, -30), 300);
+                speed = angleDiff * 2; // Increased speed multiplier
+                speed = Math.min(Math.max(speed, -60), 60); // Increased maximum speed
 
                 lastTouchX = x;
                 lastTouchY = y;
