@@ -20,9 +20,20 @@
             height: 80vmin;
             position: relative;
         }
+        #background {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            object-fit: contain;
+        }
         #fan {
             width: 100%;
             height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
             object-fit: contain;
         }
         #mobile-message {
@@ -35,6 +46,7 @@
 </head>
 <body>
     <div id="fan-container">
+        <img id="background" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png" alt="GPU Background">
         <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidget.png" alt="GPU Fan">
     </div>
     <div id="mobile-message">Mobile is more fun</div>
