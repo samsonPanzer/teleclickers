@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GPU Fan Spinner</title>
+    <title>GPU Fan Spinner with Motion Blur</title>
     <style>
         body {
             margin: 0;
@@ -35,6 +35,7 @@
             top: 0;
             left: 0;
             object-fit: contain;
+            transform-origin: center;
         }
         #mobile-message {
             display: none;
@@ -74,12 +75,18 @@
                 if (spinning) {
                     rotation += speed;
                     fan.style.transform = `rotate(${rotation}deg)`;
+                    
+                    // Apply motion blur
+                    const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
+                    fan.style.filter = `blur(${blurAmount}px)`;
+                    
                     speed *= 0.99; // Slower deceleration
 
                     if (Math.abs(speed) > 0.1) {
                         requestAnimationFrame(spinFan);
                     } else {
                         spinning = false;
+                        fan.style.filter = 'blur(0px)'; // Remove blur when stopped
                     }
                 }
             }
