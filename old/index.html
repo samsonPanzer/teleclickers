@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GPU Fan Spinner with Motion Blur</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+        #fan-container {
+            width: 80vmin;
+            height: 80vmin;
+            position: relative;
+        }
+        #background {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            object-fit: contain;
+        }
+        #fan {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            object-fit: contain;
+            transform-origin: center;
+        }
+        #mobile-message {
+            display: none;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="fan-container">
+        <img id="background" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png" alt="GPU Background">
+        <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidget.png" alt="GPU Fan">
+    </div>
+    <div id="mobile-message">Mobile is more fun</div>
+
+    <script>
+        const fan = document.getElementById('fan');
+        const fanContainer = document.getElementById('fan-container');
+        const mobileMessage = document.getElementById('mobile-message');
+        let rotation = 0;
+        let spinning = false;
+        let speed = 0;
+        let lastTouchX = 0;
+        let lastTouchY = 0;
+
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        if (!isMobile()) {
+            document.body.style.backgroundColor = 'black';
+            fanContainer.style.display = 'none';
+            mobileMessage.style.display = 'block';
+        } else {
+            function spinFan() {
+                if (spinning) {
+                    rotation += speed;
+                    fan.style.transform = `rotate(${rotation}deg)`;
+                    
+                    // Apply motion blur
+                    const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
+                    fan.style.filter = `blur(${blurAmount}px)`;
+                    
+                    speed *= 0.99; // Slower deceleration
+
+                    if (Math.abs(speed) > 0.1) {
+                        requestAnimationFrame(spinFan);
+                    } else {
+                        spinning = false;
+                        fan.style.filter = 'blur(0px)'; // Remove blur when stopped
+                    }
+                }
+            }
+
+            function getAngle(x1, y1, x2, y2) {
+                return Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+            }
+
+            function handleStart(x, y) {
+                lastTouchX = x;
+                lastTouchY = y;
+            }
+
+            function handleMove(x, y) {
+                const rect = fanContainer.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const prevAngle = getAngle(centerX, centerY, lastTouchX, lastTouchY);
+                const newAngle = getAngle(centerX, centerY, x, y);
+                
+                let angleDiff = newAngle - prevAngle;
+                
+                if (angleDiff > 180) angleDiff -= 360;
+                if (angleDiff < -180) angleDiff += 360;
+
+                speed = angleDiff * 2; // Increased speed multiplier
+                speed = Math.min(Math.max(speed, -60), 60); // Increased maximum speed
+
+                lastTouchX = x;
+                lastTouchY = y;
+
+                if (!spinning) {
+                    spinning = true;
+                    spinFan();
+                }
+            }
+
+            fanContainer.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleStart(e.touches[0].clientX, e.touches[0].clientY);
+            });
+
+            fanContainer.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            });
+
+            // Prevent default touch behavior to avoid unwanted scrolling
+            document.body.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+            }, { passive: false });
+        }
+    </script>
+</body>
+</html>
