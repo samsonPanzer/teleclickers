@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Blueberry Clicker Game</title>
     <style>
         body {
@@ -13,6 +12,7 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            touch-action: manipulation;
         }
         #energy-bar {
             width: 100%;
@@ -35,7 +35,8 @@
         #blueberry-button {
             width: 50%;
             max-width: 300px;
-            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
         .squish-bounce {
@@ -64,6 +65,7 @@
             color: white;
             border: none;
             font-size: 18px;
+            touch-action: manipulation;
         }
         .floating-blueberry {
             position: absolute;
@@ -78,7 +80,7 @@
 <body>
     <div id="energy-bar"><div id="energy-fill"></div></div>
     <div id="game-area">
-        <img id="blueberry-button" src="https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/blueberry.png" alt="Blueberry">
+            <img id="blueberry-button" src="https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/blueberry.png" alt="Blueberry">
         <img id="jar-image" src="https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/empty-jar.png" alt="Jar">
     </div>
     <button id="deposit-button">Deposit Blueberries</button>
@@ -95,26 +97,29 @@
         const depositButton = document.getElementById('deposit-button');
         const gameArea = document.getElementById('game-area');
 
-        blueberryButton.addEventListener('mousedown', (e) => {
+        blueberryButton.addEventListener('touchstart', handleBlueberryTouch, { passive: false });
+        depositButton.addEventListener('touchstart', handleDepositTouch, { passive: false });
+
+        function handleBlueberryTouch(e) {
+            e.preventDefault();
             if (energy > 0) {
                 blueberries++;
                 energy--;
                 updateDisplay();
-                createFloatingBlueberry(e.clientX, e.clientY);
+                const touch = e.touches[0];
+                createFloatingBlueberry(touch.clientX, touch.clientY);
                 
-                // Start the squish-bounce animation
                 blueberryButton.classList.add('squish-bounce');
-                
-                // Remove the class after the animation completes
                 setTimeout(() => {
                     blueberryButton.classList.remove('squish-bounce');
-                }, 400); // 400ms matches the animation duration
+                }, 400);
             }
-        });
+        }
 
-        depositButton.addEventListener('click', () => {
+        function handleDepositTouch(e) {
+            e.preventDefault();
             depositBlueberries(blueberries);
-        });
+        }
 
         function updateDisplay() {
             energyFill.style.width = `${energy}%`;
