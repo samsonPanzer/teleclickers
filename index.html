@@ -2,45 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Blueberry Clicker Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Blueberry Clicker with Energy Bar</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body, html {
             margin: 0;
             padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            touch-action: manipulation;
+            justify-content: space-between;
+            align-items: center;
+            background: radial-gradient(circle, white, #f9e7bf);
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
-        #energy-bar {
-            width: 100%;
-            height: 20px;
-            background-color: #ddd;
+        .energy-bar-container {
+            width: 500px;
+            height: 30px;
+            padding: 4px;
+            position: relative;
+            overflow: hidden;
+            image-rendering: pixelated;
         }
-        #energy-fill {
+        .energy-bar-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, darkblue, lightblue);
+            z-index: -1;
+            filter: blur(10px);
+        }
+        .energy-bar {
             width: 100%;
             height: 100%;
-            background-color: #4CAF50;
-            transition: width 0.5s;
+            display: flex;
+            background: transparent;
+        }
+        .segment {
+            flex: 1;
+            height: 100%;
+            box-sizing: border-box;
+            transition: opacity 0.3s ease;
         }
         #game-area {
-            display: flex;
             flex-grow: 1;
-            align-items: center;
+            display: flex;
             justify-content: center;
+            align-items: center;
             position: relative;
+            width: 100%;
         }
         #blueberry-button {
-            width: 50%;
-            max-width: 300px;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
+            width: 80%;
+            min-width: 300px;
+            max-width: 500px;
+            cursor: pointer;
             user-select: none;
         }
         .squish-bounce {
             animation: squish-bounce 0.4s ease-out;
+        }
+        .squish {
+            animation: squish 0.2s ease-out;
         }
         @keyframes squish-bounce {
             0% { transform: scale(1, 1); }
@@ -50,95 +81,108 @@
             80% { transform: scale(0.98, 1.02); }
             100% { transform: scale(1, 1); }
         }
-        #jar-image {
-            width: 100px;
-            height: 100px;
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        #deposit-button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            font-size: 18px;
-            touch-action: manipulation;
+        @keyframes squish {
+            0% { transform: scale(1, 1); }
+            50% { transform: scale(1.05, 0.95); }
+            100% { transform: scale(1, 1); }
         }
         .floating-blueberry {
             position: absolute;
             width: 30px;
             height: 30px;
             pointer-events: none;
-            transition: all 2s ease-out;
+            transition: all 1.5s ease-out;
             opacity: 1;
+        }
+        .inventory {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .slot {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .jar {
+            width: 80px;
+            height: 80px;
+            background-image: url('https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/jar.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div id="energy-bar"><div id="energy-fill"></div></div>
-    <div id="game-area">
-            <img id="blueberry-button" src="https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/blueberry.png" alt="Blueberry">
-        <img id="jar-image" src="https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/empty-jar.png" alt="Jar">
+    <div class="energy-bar-container">
+        <div class="energy-bar" id="energyBar"></div>
     </div>
-    <button id="deposit-button">Deposit Blueberries</button>
+
+    <div id="game-area">
+        <img id="blueberry-button" src="https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/blueberry.png" alt="Blueberry">
+    </div>
+
+    <div class="inventory" id="inventory"></div>
 
     <script>
-        let blueberries = 0;
+        class EnergyBar {
+            constructor(containerId, segmentCount = 20) {
+                this.energyBar = document.getElementById(containerId);
+                this.segmentCount = segmentCount;
+                this.createSegments();
+            }
+
+            interpolateColor(color1, color2, factor) {
+                return `rgb(${color1.map((c, i) => Math.round(c + factor * (color2[i] - c))).join(',')})`;
+            }
+
+            createSegments() {
+                const darkBlue = [0, 0, 102];
+                const lightBlue = [102, 102, 255];
+                for (let i = 0; i < this.segmentCount; i++) {
+                    const segment = document.createElement('div');
+                    segment.className = 'segment';
+                    segment.style.backgroundColor = this.interpolateColor(darkBlue, lightBlue, i / (this.segmentCount - 1));
+                    this.energyBar.appendChild(segment);
+                }
+            }
+
+            update(percentage) {
+                const activeSegments = Math.ceil((percentage / 100) * this.segmentCount);
+                Array.from(this.energyBar.children).forEach((segment, i) => {
+                    segment.style.opacity = i < activeSegments ? '1' : '0';
+                });
+            }
+        }
+
         let energy = 100;
-        const maxBlueberries = 100;
+        let blueberries = 0;
         const energyRegenRate = 1;
 
+        const energyBar = new EnergyBar('energyBar');
         const blueberryButton = document.getElementById('blueberry-button');
-        const jarImage = document.getElementById('jar-image');
-        const energyFill = document.getElementById('energy-fill');
-        const depositButton = document.getElementById('deposit-button');
         const gameArea = document.getElementById('game-area');
 
-        blueberryButton.addEventListener('touchstart', handleBlueberryTouch, { passive: false });
-        depositButton.addEventListener('touchstart', handleDepositTouch, { passive: false });
-
-        function handleBlueberryTouch(e) {
-            e.preventDefault();
-            if (energy > 0) {
-                blueberries++;
-                energy--;
-                updateDisplay();
-                const touch = e.touches[0];
-                createFloatingBlueberry(touch.clientX, touch.clientY);
-                
-                blueberryButton.classList.add('squish-bounce');
-                setTimeout(() => {
-                    blueberryButton.classList.remove('squish-bounce');
-                }, 400);
+        function addSlotWithJar() {
+            const inventory = document.getElementById('inventory');
+            if (inventory.children.length < 5) {
+                const slot = document.createElement('div');
+                slot.className = 'slot';
+                const jar = document.createElement('div');
+                jar.className = 'jar';
+                slot.appendChild(jar);
+                inventory.appendChild(slot);
             }
-        }
-
-        function handleDepositTouch(e) {
-            e.preventDefault();
-            depositBlueberries(blueberries);
-        }
-
-        function updateDisplay() {
-            energyFill.style.width = `${energy}%`;
-            
-            if (blueberries <= 25) {
-                jarImage.src = 'https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/empty-jar.png';
-            } else if (blueberries <= 50) {
-                jarImage.src = 'https://example.com/quarter-jar.png';
-            } else if (blueberries <= 75) {
-                jarImage.src = 'https://example.com/half-jar.png';
-            } else {
-                jarImage.src = 'https://example.com/full-jar.png';
-            }
-        }
-
-        function depositBlueberries(amount) {
-            console.log(`Deposited ${amount} blueberries`);
-            blueberries = 0;
-            updateDisplay();
         }
 
         function createFloatingBlueberry(x, y) {
@@ -150,22 +194,59 @@
             gameArea.appendChild(floatingBlueberry);
 
             setTimeout(() => {
-                floatingBlueberry.style.transform = `translate(${Math.random() * 100 - 50}px, -100px)`;
+                floatingBlueberry.style.transform = `translate(${Math.random() * 200 - 100}px, -200px)`;
                 floatingBlueberry.style.opacity = '0';
             }, 50);
 
             setTimeout(() => {
                 gameArea.removeChild(floatingBlueberry);
-            }, 2000);
+            }, 1500);
         }
+
+        let lastClickTime = 0;
+        let clickInterval;
+
+        function animateButton(type) {
+            blueberryButton.classList.remove('squish-bounce', 'squish');
+            void blueberryButton.offsetWidth; // Trigger reflow
+            blueberryButton.classList.add(type);
+        }
+
+        function handleClick(e) {
+            if (energy > 0) {
+                const currentTime = Date.now();
+                if (currentTime - lastClickTime > 1000) {
+                    animateButton('squish-bounce');
+                }
+                lastClickTime = currentTime;
+
+                blueberries++;
+                energy--;
+                energyBar.update(energy);
+                createFloatingBlueberry(e.clientX, e.clientY);
+
+                clearInterval(clickInterval);
+                clickInterval = setInterval(() => {
+                    if (Date.now() - lastClickTime >= 1000) {
+                        animateButton('squish');
+                        clearInterval(clickInterval);
+                    }
+                }, 1000);
+            }
+        }
+
+        blueberryButton.addEventListener('mousedown', handleClick);
 
         setInterval(() => {
             if (energy < 100) {
                 energy += energyRegenRate;
                 if (energy > 100) energy = 100;
-                updateDisplay();
+                energyBar.update(energy);
             }
         }, 1000);
+
+        // Initialize with one jar
+        addSlotWithJar();
     </script>
 </body>
 </html>
