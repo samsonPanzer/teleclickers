@@ -22,7 +22,8 @@
             font-family: Arial, sans-serif;
         }
         .energy-bar-container {
-            width: 500px;
+            width: 100%;
+            max-width: 500px;
             height: 30px;
             padding: 4px;
             position: relative;
@@ -203,8 +204,8 @@
             }, 1500);
         }
 
-        let lastClickTime = 0;
-        let clickInterval;
+        let isFirstClick = true;
+        let idleTimeout;
 
         function animateButton(type) {
             blueberryButton.classList.remove('squish-bounce', 'squish');
@@ -214,28 +215,28 @@
 
         function handleClick(e) {
             if (energy > 0) {
-                const currentTime = Date.now();
-                if (currentTime - lastClickTime > 1000) {
+                if (isFirstClick) {
                     animateButton('squish-bounce');
+                    isFirstClick = false;
+                } else {
+                    animateButton('squish');
                 }
-                lastClickTime = currentTime;
 
                 blueberries++;
                 energy--;
                 energyBar.update(energy);
-                createFloatingBlueberry(e.clientX, e.clientY);
+                createFloatingBlueberry(e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY);
 
-                clearInterval(clickInterval);
-                clickInterval = setInterval(() => {
-                    if (Date.now() - lastClickTime >= 1000) {
-                        animateButton('squish');
-                        clearInterval(clickInterval);
-                    }
+                clearTimeout(idleTimeout);
+                idleTimeout = setTimeout(() => {
+                    isFirstClick = true;
+                    animateButton('squish');
                 }, 1000);
             }
         }
 
         blueberryButton.addEventListener('mousedown', handleClick);
+        blueberryButton.addEventListener('touchstart', handleClick);
 
         setInterval(() => {
             if (energy < 100) {
@@ -246,6 +247,7 @@
         }, 1000);
 
         // Initialize with one jar
+        addSlotWithJar();
         addSlotWithJar();
     </script>
 </body>
