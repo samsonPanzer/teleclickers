@@ -281,6 +281,15 @@
             }
         }, 1000);
 
+
+        const closeButton = document.createElement('button');
+closeButton.textContent = 'close app';
+closeButton.addEventListener('click', closeApp);
+
+// Append buttons to the body or another container
+document.body.prepend(closeButton);
+
+
         // Initialize with one jar
         addSlotWithJar();
         addSlotWithJar();
