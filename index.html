@@ -1,119 +1,74 @@
- <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram Mini App</title>
+    <style>
+        body{
+            background-color: aliceblue;
+            color: black;
         }
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            background: radial-gradient(circle, darkblue, black);
-            padding: 20px;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        .energy-bar-container {
-            width: 100%;
-            max-width: 500px;
-            height: 30px;
-            padding: 4px;
-            position: relative;
-            overflow: hidden;
-            image-rendering: pixelated;
-        }
-        .energy-bar-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to right, darkblue, lightblue);
-            z-index: -1;
-            filter: blur(10px);
-        }
-        .energy-bar {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            background: transparent;
-        }
-        .segment {
-            flex: 1;
-            height: 100%;
-            box-sizing: border-box;
-            transition: opacity 0.3s ease;
-        }
-        #game-area {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            width: 100%;
-        }
-        #blueberry-button {
-            width: 80%;
-            min-width: 300px;
-            max-width: 500px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .squish-bounce {
-            animation: squish-bounce 0.4s ease-out;
-        }
-        .squish {
-            animation: squish 0.2s ease-out;
-        }
-        @keyframes squish-bounce {
-            0% { transform: scale(1, 1); }
-            20% { transform: scale(1.1, 0.9); }
-            40% { transform: scale(0.95, 1.05); }
-            60% { transform: scale(1.05, 0.95); }
-            80% { transform: scale(0.98, 1.02); }
-            100% { transform: scale(1, 1); }
-        }
-        @keyframes squish {
-            0% { transform: scale(1, 1); }
-            50% { transform: scale(1.05, 0.95); }
-            100% { transform: scale(1, 1); }
-        }
-        .floating-blueberry {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            pointer-events: none;
-            transition: all 1.5s ease-out;
-            opacity: 1;
-        }
-        .inventory {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-        }
-        .slot {
+        button{
             width: 100px;
             height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .jar {
-            width: 80px;
-            height: 80px;
-            background-image: url('https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/jar.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-        button {
-            margin: 10px 0;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
         }
     </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+          (function(message) {
+        let clicker = 0;
+        // Function to get the value of the "startapp" parameter from the URL
+        function getStartAppParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('startapp');
+        }
+
+        // When the window loads, capture the "startapp" parameter and save it as a variable
+        window.onload = function() {
+            const startAppCommand = getStartAppParam();
+
+            // Do something with the startAppCommand variable, e.g., display it
+            if (startAppCommand) {
+                document.getElementById('startAppValue').textContent = startAppCommand;
+                clicker = Number(startAppCommand)
+            }
+        };
+
+        let addClicker = () => {
+            clicker++;
+            document.getElementById('startAppValue').textContent = clicker;
+        }
+
+        let closeApp = () => {
+            if (window.Telegram.WebApp) {
+        if(clicker == null )clicker = 0        
+       let data =  JSON.stringify(clicker)
+       window.Telegram.WebApp.sendData(data);
+      // alert("sent data")
+     }
+        }
+
+
+
+       // document.body.appendChild(buttonGame)
+      
+    console.log(message);
+})("Hello, World!"); 
+
+
+let buttonGame = document.createElement("button");
+        // buttonGame.onclick = function(){
+        //     console.log("rest")
+       // }
+        buttonGame.textContent = "CLICK MEE"
+        document.getElementById("test").appendChild(buttonGame)
+    </script>
+</head>
+<body>
+    <div id="test">hello</div>
+    <h1>Telegram Mini App</h1>
+    <p>Start App Command: <span id="startAppValue">None</span></p>
+    <button onclick="addClicker()">plus</button>
+    <button onclick="closeApp()">close app</button>
+</body>
+</html>
