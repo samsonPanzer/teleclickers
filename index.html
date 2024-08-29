@@ -275,6 +275,9 @@
         blueberryButton.addEventListener('touchstart', handleClick);
 
         setInterval(() => {
+            if (energy < 50) {
+                document.getElementById("blueberry-button").src = "https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/blueberry2.png"
+            }
             if (energy < 100) {
                 energy += energyRegenRate;
                 if (energy > 100) energy = 100;
