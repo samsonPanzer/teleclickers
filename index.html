@@ -29,7 +29,7 @@
             position: relative;
             overflow: hidden;
             image-rendering: pixelated;
-            background:  lightblue;
+            background:  rgb(255, 255, 255);
         }
         .energy-bar-container::before {
             content: '';
@@ -38,7 +38,6 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background:  lightblue;
             z-index: -1;
             filter: blur(10px);
         }
@@ -85,7 +84,7 @@
         }
         @keyframes squish {
             0% { transform: scale(1, 1); }
-            50% { transform: scale(1.05, 0.95); }
+            50% { transform: scale(1.01, 0.99); }
             100% { transform: scale(1, 1); }
         }
         .floating-blueberry {
@@ -296,6 +295,7 @@ document.body.prepend(closeButton);
 
 
         // Initialize with one jar
+        addSlotWithJar();
         addSlotWithJar();
         addSlotWithJar();
     </script>
