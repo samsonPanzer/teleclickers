@@ -3,301 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Blueberry Clicker with Energy Bar</title>
+    <title>GPU Fan Spinner with Motion Blur</title>
     <style>
-        body, html {
+        body {
             margin: 0;
             padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-        body {
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            background: radial-gradient(circle, darkblue, black);
-            padding: 20px;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        .energy-bar-container {
-            width: 100%;
-            max-width: 500px;
-            height: 30px;
-            padding: 4px;
-            position: relative;
+            height: 100vh;
+            background-color: #f0f0f0;
             overflow: hidden;
-            image-rendering: pixelated;
-            background:  rgb(255, 255, 255);
         }
-        .energy-bar-container::before {
-            content: '';
+        #fan-container {
+            width: 80vmin;
+            height: 80vmin;
+            position: relative;
+        }
+        #background {
+            width: 100%;
+            height: 100%;
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            filter: blur(10px);
+            object-fit: contain;
         }
-        .energy-bar {
+        #fan {
             width: 100%;
             height: 100%;
-            display: flex;
-            background: transparent;
-        }
-        .segment {
-            flex: 1;
-            height: 100%;
-            box-sizing: border-box;
-            transition: opacity 0.3s ease;
-        }
-        #game-area {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            width: 100%;
-        }
-        #blueberry-button {
-            width: 80%;
-            min-width: 300px;
-            max-width: 500px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .squish-bounce {
-            animation: squish-bounce 0.4s ease-out;
-        }
-        .squish {
-            animation: squish 0.2s ease-out;
-        }
-        @keyframes squish-bounce {
-            0% { transform: scale(1, 1); }
-            20% { transform: scale(1.1, 0.9); }
-            40% { transform: scale(0.95, 1.05); }
-            60% { transform: scale(1.05, 0.95); }
-            80% { transform: scale(0.98, 1.02); }
-            100% { transform: scale(1, 1); }
-        }
-        @keyframes squish {
-            0% { transform: scale(1, 1); }
-            50% { transform: scale(1.01, 0.99); }
-            100% { transform: scale(1, 1); }
-        }
-        .floating-blueberry {
             position: absolute;
-            width: 30px;
-            height: 30px;
-            pointer-events: none;
-            transition: all 1.5s ease-out;
-            opacity: 1;
+            top: 0;
+            left: 0;
+            object-fit: contain;
+            transform-origin: center;
         }
-        .inventory {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-        }
-        .slot {
-            width: 100px;
-            height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .jar {
-            width: 80px;
-            height: 80px;
-            background-image: url('https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/jar.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-        button {
-            margin: 10px 0;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+        #mobile-message {
+            display: none;
+            color: white;
+            font-size: 24px;
+            text-align: center;
         }
     </style>
 </head>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <body>
-    <div class="energy-bar-container">
-        <div class="energy-bar" id="energyBar"></div>
+    <div id="fan-container">
+        <img id="background" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png" alt="GPU Background">
+        <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidget.png" alt="GPU Fan">
     </div>
-
-    <div id="game-area">
-        <img id="blueberry-button" src="https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/blueberry.png" alt="Blueberry">
-    </div>
-
-    <div class="inventory" id="inventory"></div>
+    <div id="mobile-message">Mobile is more fun</div>
 
     <script>
-        class EnergyBar {
-            constructor(containerId, segmentCount = 15) {
-                this.energyBar = document.getElementById(containerId);
-                this.segmentCount = segmentCount;
-                this.createSegments();
-            }
+        const fan = document.getElementById('fan');
+        const fanContainer = document.getElementById('fan-container');
+        const mobileMessage = document.getElementById('mobile-message');
+        let rotation = 0;
+        let spinning = false;
+        let speed = 0;
+        let lastTouchX = 0;
+        let lastTouchY = 0;
 
-            interpolateColor(color1, color2, factor) {
-                return `rgb(${color1.map((c, i) => Math.round(c + factor * (color2[i] - c))).join(',')})`;
-            }
+        function isMobile() {
+           // return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+           return true
+        }
 
-            createSegments() {
-                const darkBlue = [0, 0, 102];
-                const lightBlue = [102, 102, 255];
-                for (let i = 0; i < this.segmentCount; i++) {
-                    const segment = document.createElement('div');
-                    segment.className = 'segment';
-                    segment.style.backgroundColor = this.interpolateColor(darkBlue, lightBlue, i / (this.segmentCount - 1));
-                    this.energyBar.appendChild(segment);
+        if (!isMobile()) {
+            document.body.style.backgroundColor = 'black';
+            fanContainer.style.display = 'none';
+            mobileMessage.style.display = 'block';
+        } else {
+            function spinFan() {
+                if (spinning) {
+                    rotation += speed;
+                    fan.style.transform = `rotate(${rotation}deg)`;
+                    
+                    // Apply motion blur
+                    const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
+                    fan.style.filter = `blur(${blurAmount}px)`;
+                    
+                    speed *= 0.99; // Slower deceleration
+
+                    if (Math.abs(speed) > 0.1) {
+                        requestAnimationFrame(spinFan);
+                    } else {
+                        spinning = false;
+                        fan.style.filter = 'blur(0px)'; // Remove blur when stopped
+                    }
                 }
             }
 
-            update(percentage) {
-                const activeSegments = Math.ceil((percentage / 100) * this.segmentCount);
-                Array.from(this.energyBar.children).forEach((segment, i) => {
-                    segment.style.opacity = i < activeSegments ? '1' : '0';
-                });
+            function getAngle(x1, y1, x2, y2) {
+                return Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
             }
-        }
 
-        let energy = 100;
-        let blueberries = 0;
-
-
-        let clicker = 0;
-  // Function to get the value of the "startapp" parameter from the URL
-  function getStartAppParam() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('startapp');
-  }
-
-  // When the window loads, capture the "startapp" parameter and save it as a variable
-  window.onload = function() {
-      const startAppCommand = getStartAppParam();
-
-      // Do something with the startAppCommand variable, e.g., display it
-      if (startAppCommand) {
-          //document.getElementById('startAppValue').textContent = startAppCommand;
-          clicker = Number(startAppCommand)
-      }
-  };
-
- 
-
-  let closeApp = () => {
-      if (window.Telegram.WebApp) {
-  if(clicker == null )clicker = 0        
- let data =  JSON.stringify(clicker)
- window.Telegram.WebApp.sendData(data);
-// alert("sent data")
-}
-  }
-
-
-
-
-        const energyRegenRate = 1;
-
-        const energyBar = new EnergyBar('energyBar');
-        const blueberryButton = document.getElementById('blueberry-button');
-        const gameArea = document.getElementById('game-area');
-
-        function addSlotWithJar() {
-            const inventory = document.getElementById('inventory');
-            if (inventory.children.length < 5) {
-                const slot = document.createElement('div');
-                slot.className = 'slot';
-                const jar = document.createElement('div');
-                jar.className = 'jar';
-                slot.appendChild(jar);
-                inventory.appendChild(slot);
+            function handleStart(x, y) {
+                lastTouchX = x;
+                lastTouchY = y;
             }
-        }
 
-        function createFloatingBlueberry(x, y) {
-            const floatingBlueberry = document.createElement('img');
-            floatingBlueberry.src = 'https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/miniberry.png';
-            floatingBlueberry.className = 'floating-blueberry';
-            floatingBlueberry.style.left = `${x}px`;
-            floatingBlueberry.style.top = `${y}px`;
-            gameArea.appendChild(floatingBlueberry);
+            function handleMove(x, y) {
+                const rect = fanContainer.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const prevAngle = getAngle(centerX, centerY, lastTouchX, lastTouchY);
+                const newAngle = getAngle(centerX, centerY, x, y);
+                
+                let angleDiff = newAngle - prevAngle;
+                
+                if (angleDiff > 180) angleDiff -= 360;
+                if (angleDiff < -180) angleDiff += 360;
 
-            setTimeout(() => {
-                floatingBlueberry.style.transform = `translate(${Math.random() * 200 - 100}px, -200px)`;
-                floatingBlueberry.style.opacity = '0';
-            }, 50);
+                speed = angleDiff * 2; // Increased speed multiplier
+                speed = Math.min(Math.max(speed, -60), 60); // Increased maximum speed
 
-            setTimeout(() => {
-                gameArea.removeChild(floatingBlueberry);
-            }, 1500);
-        }
+                lastTouchX = x;
+                lastTouchY = y;
 
-        let isFirstClick = true;
-        let idleTimeout;
-
-        function animateButton(type) {
-            blueberryButton.classList.remove('squish-bounce', 'squish');
-            void blueberryButton.offsetWidth; // Trigger reflow
-            blueberryButton.classList.add(type);
-        }
-
-        function handleClick(e) {
-            if (energy > 0) {
-                if (isFirstClick) {
-                    animateButton('squish-bounce');
-                    isFirstClick = false;
-                } else {
-                    animateButton('squish');
+                if (!spinning) {
+                    spinning = true;
+                    spinFan();
                 }
-
-                blueberries++;
-                clicker++;
-                energy--;
-                energyBar.update(energy);
-                createFloatingBlueberry(e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY);
-
-                clearTimeout(idleTimeout);
-                idleTimeout = setTimeout(() => {
-                    isFirstClick = true;
-                  // animateButton('squish');
-                }, 1000);
             }
+
+            fanContainer.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleStart(e.touches[0].clientX, e.touches[0].clientY);
+            });
+
+            fanContainer.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            });
+
+            // Prevent default touch behavior to avoid unwanted scrolling
+            document.body.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+            }, { passive: false });
         }
-
-        //blueberryButton.addEventListener('mousedown', handleClick);
-        blueberryButton.addEventListener('touchstart', handleClick);
-
-        setInterval(() => {
-            if (energy < 50) {
-                document.getElementById("blueberry-button").src = "https://raw.githubusercontent.com/samsonPanzer/blueberryclicker/main/images/blueberry2.png"
-            }
-            if (energy < 100) {
-                energy += energyRegenRate;
-                if (energy > 100) energy = 100;
-                energyBar.update(energy);
-            }
-        }, 1000);
-
-
-        const closeButton = document.createElement('button');
-closeButton.textContent = 'close app';
-closeButton.addEventListener('click', closeApp);
-
-// Append buttons to the body or another container
-document.body.prepend(closeButton);
-
-
-        // Initialize with one jar
-        addSlotWithJar();
-        addSlotWithJar();
-        addSlotWithJar();
     </script>
 </body>
 </html>
