@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GPU Fan Spinner with Motion Blur</title>
+    <title>GPU Fan Spinner with Motion Blur and Speedometer</title>
     <style>
         body {
             margin: 0;
@@ -43,19 +43,29 @@
             font-size: 24px;
             text-align: center;
         }
+        #speedometer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <div id="fan-container">
-         <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop2.png" alt="GPU Fan">
+        <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop2.png" alt="GPU Fan">
         <img id="background" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png" alt="GPU Background">
     </div>
+    <div id="speedometer">Speed: 0 RPM</div>
     <div id="mobile-message">Mobile is more fun</div>
 
     <script>
         const fan = document.getElementById('fan');
         const fanContainer = document.getElementById('fan-container');
         const mobileMessage = document.getElementById('mobile-message');
+        const speedometer = document.getElementById('speedometer');
         let rotation = 0;
         let spinning = false;
         let speed = 0;
@@ -78,10 +88,14 @@
                     fan.style.transform = `rotate(${rotation}deg)`;
                     
                     // Apply motion blur
-                   // const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
-                    //fan.style.filter = `blur(${blurAmount}px)`;
+                  //  const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
+                  //  fan.style.filter = `blur(${blurAmount}px)`;
                     
                     speed *= 0.99; // Slower deceleration
+
+                    // Update speedometer
+                    const rpm = Math.round(Math.abs(speed) * 60 / 360);
+                    speedometer.textContent = `Speed: ${rpm} RPM`;
 
                     if (Math.abs(speed) > 0.1) {
                         requestAnimationFrame(spinFan);
