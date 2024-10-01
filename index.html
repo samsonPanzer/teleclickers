@@ -12,7 +12,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #fca300;
             overflow: hidden;
         }
         #fan-container {
@@ -55,7 +55,7 @@
 </head>
 <body>
     <div id="fan-container">
-        <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop2.png" alt="GPU Fan">
+        <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidget.png" alt="GPU Fan">
         <img id="background" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png" alt="GPU Background">
     </div>
     <div id="speedometer">Speed: 0 RPM</div>
@@ -88,8 +88,8 @@
                     fan.style.transform = `rotate(${rotation}deg)`;
                     
                     // Apply motion blur
-                  //  const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
-                  //  fan.style.filter = `blur(${blurAmount}px)`;
+                    const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
+                    fan.style.filter = `blur(${blurAmount}px)`;
                     
                     speed *= 0.99; // Slower deceleration
 
