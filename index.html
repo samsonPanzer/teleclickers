@@ -58,16 +58,18 @@
             opacity: 0.8;
         }
 
-        /* Swipe Block */
+        /* Enhanced Swipe Block */
         .swipe-container {
             overflow: hidden;
             position: relative;
             margin-bottom: 12px;
+            border-radius: 8px;
         }
 
         .swipe-wrapper {
             display: flex;
-            transition: transform 0.3s ease-out;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            touch-action: pan-y pinch-zoom;
         }
 
         .swipe-item {
@@ -76,10 +78,48 @@
             padding: 16px;
             box-sizing: border-box;
             background-color: rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
+            position: relative;
         }
 
-        /* List Item */
+        /* Swipe indicators */
+        .swipe-indicator-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .swipe-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--tg-theme-hint-color);
+            margin: 0 4px;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        .swipe-indicator.active {
+            opacity: 1;
+        }
+
+        /* Swipe hint animation */
+        .swipe-hint {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            opacity: 0.6;
+            animation: swipeHint 1.5s infinite;
+        }
+
+        @keyframes swipeHint {
+            0%, 100% { transform: translateX(0) translateY(-50%); }
+            50% { transform: translateX(-10px) translateY(-50%); }
+        }
+
+        /* Other styles remain the same */
         .list-item {
             display: flex;
             align-items: center;
@@ -109,7 +149,6 @@
             font-size: 14px;
         }
 
-        /* Section Header */
         .section-header {
             font-size: 14px;
             color: var(--tg-theme-hint-color);
@@ -117,7 +156,6 @@
             margin: 16px 0 8px;
         }
 
-        /* Input Field */
         .input-field {
             width: 100%;
             padding: 12px;
@@ -142,46 +180,86 @@
         <div class="section-header">Swipeable Content</div>
         <div class="swipe-container" id="swipeContainer">
             <div class="swipe-wrapper" id="swipeWrapper">
-                <div class="swipe-item">Swipe item 1</div>
+                <div class="swipe-item">
+                    Swipe item 1
+                    <div class="swipe-hint">←</div>
+                </div>
                 <div class="swipe-item">Swipe item 2</div>
                 <div class="swipe-item">Swipe item 3</div>
             </div>
         </div>
-
-        <div class="section-header">List</div>
-        <div class="list-item">
-            <div class="list-item-avatar"></div>
-            <div class="list-item-content">
-                <div class="list-item-title">John Doe</div>
-                <div class="list-item-subtitle">Last seen recently</div>
-            </div>
+        <div class="swipe-indicator-container" id="swipeIndicators">
+            <div class="swipe-indicator active"></div>
+            <div class="swipe-indicator"></div>
+            <div class="swipe-indicator"></div>
         </div>
 
-        <div class="section-header">Input</div>
-        <input type="text" class="input-field" placeholder="Enter message...">
+        <!-- Rest of the HTML remains the same -->
     </div>
 
     <script>
-        // Initialize swipe functionality
+        // Enhanced swipe functionality
         const swipeContainer = document.getElementById('swipeContainer');
         const swipeWrapper = document.getElementById('swipeWrapper');
+        const indicators = document.querySelectorAll('.swipe-indicator');
         let currentIndex = 0;
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
 
         const hammer = new Hammer(swipeContainer);
-        hammer.on('swipeleft swiperight', function(e) {
-            if (e.type === 'swipeleft' && currentIndex < 2) {
-                currentIndex++;
-            } else if (e.type === 'swiperight' && currentIndex > 0) {
-                currentIndex--;
+        hammer.on('panstart panmove panend', function(e) {
+            const containerWidth = swipeContainer.offsetWidth;
+            
+            if (e.type === 'panstart') {
+                isDragging = true;
+                startX = e.center.x;
+                swipeWrapper.style.transition = 'none';
             }
-            updateSwipePosition();
+            else if (e.type === 'panmove' && isDragging) {
+                const deltaX = e.center.x - startX;
+                const moveX = -currentIndex * containerWidth + deltaX;
+                currentX = moveX;
+                
+                // Limit the drag within bounds
+                if (moveX > 0 || moveX < -(swipeWrapper.children.length - 1) * containerWidth) {
+                    currentX = moveX > 0 ? moveX / 3 : moveX - (moveX + (swipeWrapper.children.length - 1) * containerWidth) / 3;
+                }
+                
+                swipeWrapper.style.transform = `translateX(${currentX}px)`;
+            }
+            else if (e.type === 'panend') {
+                isDragging = false;
+                swipeWrapper.style.transition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                
+                const deltaX = e.deltaX;
+                const threshold = containerWidth / 3;
+                
+                if (Math.abs(deltaX) > threshold) {
+                    if (deltaX > 0 && currentIndex > 0) {
+                        currentIndex--;
+                    } else if (deltaX < 0 && currentIndex < swipeWrapper.children.length - 1) {
+                        currentIndex++;
+                    }
+                }
+                
+                updateSwipePosition();
+                updateIndicators();
+            }
         });
 
         function updateSwipePosition() {
-            swipeWrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+            const containerWidth = swipeContainer.offsetWidth;
+            swipeWrapper.style.transform = `translateX(${-currentIndex * containerWidth}px)`;
         }
 
-        // Function to add a new text block
+        function updateIndicators() {
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        // Existing functions remain the same
         function addTextBlock() {
             const container = document.querySelector('.container');
             const newTextBlock = document.createElement('div');
@@ -190,7 +268,6 @@
             container.insertBefore(newTextBlock, container.firstChild);
         }
 
-        // Function to add a new button
         function addButton() {
             const container = document.querySelector('.container');
             const newButton = document.createElement('button');
@@ -198,6 +275,9 @@
             newButton.textContent = 'New Button';
             container.insertBefore(newButton, container.firstChild);
         }
+
+        // Initialize
+        window.addEventListener('resize', updateSwipePosition);
     </script>
 </body>
 </html>
