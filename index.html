@@ -3,26 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Telegram Web App</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <title>GPU Fan Spinner with Motion Blur and Speedometer</title>
     <style>
-        :root {
-            --tg-theme-bg-color: #ffffff;
-            --tg-theme-text-color: #000000;
-            --tg-theme-hint-color: #999999;
-            --tg-theme-link-color: #2481cc;
-            --tg-theme-button-color: #2481cc;
-            --tg-theme-button-text-color: #ffffff;
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--tg-theme-bg-color);
-            color: var(--tg-theme-text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fca300;
+            overflow: hidden;
+        }
+        #fan-container {
+            width: 80vmin;
+            height: 80vmin;
+            position: relative;
+        }
+        #background {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            object-fit: contain;
+        }
+        #fan {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            object-fit: contain;
+            transform-origin: center;
+        }
+        #mobile-message {
+            display: none;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+        }
+        #speedometer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
         }
 
+
+        
         .container {
             max-width: 100%;
             padding: 16px;
@@ -58,18 +90,16 @@
             opacity: 0.8;
         }
 
-        /* Enhanced Swipe Block */
+        /* Swipe Block */
         .swipe-container {
             overflow: hidden;
             position: relative;
             margin-bottom: 12px;
-            border-radius: 8px;
         }
 
         .swipe-wrapper {
             display: flex;
-            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-            touch-action: pan-y pinch-zoom;
+            transition: transform 0.3s ease-out;
         }
 
         .swipe-item {
@@ -78,48 +108,10 @@
             padding: 16px;
             box-sizing: border-box;
             background-color: rgba(0, 0, 0, 0.05);
-            position: relative;
+            border-radius: 8px;
         }
 
-        /* Swipe indicators */
-        .swipe-indicator-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 8px;
-        }
-
-        .swipe-indicator {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: var(--tg-theme-hint-color);
-            margin: 0 4px;
-            opacity: 0.3;
-            transition: opacity 0.3s;
-        }
-
-        .swipe-indicator.active {
-            opacity: 1;
-        }
-
-        /* Swipe hint animation */
-        .swipe-hint {
-            position: absolute;
-            top: 50%;
-            right: 12px;
-            transform: translateY(-50%);
-            width: 24px;
-            height: 24px;
-            opacity: 0.6;
-            animation: swipeHint 1.5s infinite;
-        }
-
-        @keyframes swipeHint {
-            0%, 100% { transform: translateX(0) translateY(-50%); }
-            50% { transform: translateX(-10px) translateY(-50%); }
-        }
-
-        /* Other styles remain the same */
+        /* List Item */
         .list-item {
             display: flex;
             align-items: center;
@@ -149,6 +141,7 @@
             font-size: 14px;
         }
 
+        /* Section Header */
         .section-header {
             font-size: 14px;
             color: var(--tg-theme-hint-color);
@@ -156,6 +149,7 @@
             margin: 16px 0 8px;
         }
 
+        /* Input Field */
         .input-field {
             width: 100%;
             padding: 12px;
@@ -180,104 +174,125 @@
         <div class="section-header">Swipeable Content</div>
         <div class="swipe-container" id="swipeContainer">
             <div class="swipe-wrapper" id="swipeWrapper">
-                <div class="swipe-item">
-                    Swipe item 1
-                    <div class="swipe-hint">←</div>
-                </div>
+                <div class="swipe-item">Swipe item 1</div>
                 <div class="swipe-item">Swipe item 2</div>
                 <div class="swipe-item">Swipe item 3</div>
             </div>
         </div>
-        <div class="swipe-indicator-container" id="swipeIndicators">
-            <div class="swipe-indicator active"></div>
-            <div class="swipe-indicator"></div>
-            <div class="swipe-indicator"></div>
+
+        <div class="section-header">List</div>
+        <div class="list-item">
+            <div class="list-item-avatar"></div>
+            <div class="list-item-content">
+                <div class="list-item-title">John Doe</div>
+                <div class="list-item-subtitle">Last seen recently</div>
+            </div>
         </div>
 
-        <!-- Rest of the HTML remains the same -->
+        <div class="section-header">Input</div>
+        <input type="text" class="input-field" placeholder="Enter message...">
     </div>
+    <div id="fan-container">
+        <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidget.png" alt="GPU Fan">
+        <img id="background" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png" alt="GPU Background">
+    </div>
+    <div id="speedometer">Speed: 0 RPM</div>
+    <div id="mobile-message">Mobile is more fun</div>
 
     <script>
-        // Enhanced swipe functionality
-        const swipeContainer = document.getElementById('swipeContainer');
-        const swipeWrapper = document.getElementById('swipeWrapper');
-        const indicators = document.querySelectorAll('.swipe-indicator');
-        let currentIndex = 0;
-        let startX = 0;
-        let currentX = 0;
-        let isDragging = false;
+        const fan = document.getElementById('fan');
+        const fanContainer = document.getElementById('fan-container');
+        const mobileMessage = document.getElementById('mobile-message');
+        const speedometer = document.getElementById('speedometer');
+        let rotation = 0;
+        let spinning = false;
+        let speed = 0;
+        let lastTouchX = 0;
+        let lastTouchY = 0;
 
-        const hammer = new Hammer(swipeContainer);
-        hammer.on('panstart panmove panend', function(e) {
-            const containerWidth = swipeContainer.offsetWidth;
-            
-            if (e.type === 'panstart') {
-                isDragging = true;
-                startX = e.center.x;
-                swipeWrapper.style.transition = 'none';
-            }
-            else if (e.type === 'panmove' && isDragging) {
-                const deltaX = e.center.x - startX;
-                const moveX = -currentIndex * containerWidth + deltaX;
-                currentX = moveX;
-                
-                // Limit the drag within bounds
-                if (moveX > 0 || moveX < -(swipeWrapper.children.length - 1) * containerWidth) {
-                    currentX = moveX > 0 ? moveX / 3 : moveX - (moveX + (swipeWrapper.children.length - 1) * containerWidth) / 3;
-                }
-                
-                swipeWrapper.style.transform = `translateX(${currentX}px)`;
-            }
-            else if (e.type === 'panend') {
-                isDragging = false;
-                swipeWrapper.style.transition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
-                
-                const deltaX = e.deltaX;
-                const threshold = containerWidth / 3;
-                
-                if (Math.abs(deltaX) > threshold) {
-                    if (deltaX > 0 && currentIndex > 0) {
-                        currentIndex--;
-                    } else if (deltaX < 0 && currentIndex < swipeWrapper.children.length - 1) {
-                        currentIndex++;
+        function isMobile() {
+           // return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+           return true
+        }
+
+        if (!isMobile()) {
+            document.body.style.backgroundColor = 'black';
+            fanContainer.style.display = 'none';
+            mobileMessage.style.display = 'block';
+        } else {
+            function spinFan() {
+                if (spinning) {
+                    rotation += speed;
+                    fan.style.transform = `rotate(${rotation}deg)`;
+                    
+                    // Apply motion blur
+                    const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
+                    fan.style.filter = `blur(${blurAmount}px)`;
+                    
+                    speed *= 0.99; // Slower deceleration
+
+                    // Update speedometer
+                    const rpm = Math.round(Math.abs(speed) * 60 / 360);
+                    speedometer.textContent = `Speed: ${rpm} RPM`;
+
+                    if (Math.abs(speed) > 0.1) {
+                        requestAnimationFrame(spinFan);
+                    } else {
+                        spinning = false;
+                        fan.style.filter = 'blur(0px)'; // Remove blur when stopped
                     }
                 }
-                
-                updateSwipePosition();
-                updateIndicators();
             }
-        });
 
-        function updateSwipePosition() {
-            const containerWidth = swipeContainer.offsetWidth;
-            swipeWrapper.style.transform = `translateX(${-currentIndex * containerWidth}px)`;
-        }
+            function getAngle(x1, y1, x2, y2) {
+                return Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+            }
 
-        function updateIndicators() {
-            indicators.forEach((indicator, index) => {
-                indicator.classList.toggle('active', index === currentIndex);
+            function handleStart(x, y) {
+                lastTouchX = x;
+                lastTouchY = y;
+            }
+
+            function handleMove(x, y) {
+                const rect = fanContainer.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const prevAngle = getAngle(centerX, centerY, lastTouchX, lastTouchY);
+                const newAngle = getAngle(centerX, centerY, x, y);
+                
+                let angleDiff = newAngle - prevAngle;
+                
+                if (angleDiff > 180) angleDiff -= 360;
+                if (angleDiff < -180) angleDiff += 360;
+
+                speed = angleDiff * 2; // Increased speed multiplier
+                speed = Math.min(Math.max(speed, -60), 60); // Increased maximum speed
+
+                lastTouchX = x;
+                lastTouchY = y;
+
+                if (!spinning) {
+                    spinning = true;
+                    spinFan();
+                }
+            }
+
+            fanContainer.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleStart(e.touches[0].clientX, e.touches[0].clientY);
             });
-        }
 
-        // Existing functions remain the same
-        function addTextBlock() {
-            const container = document.querySelector('.container');
-            const newTextBlock = document.createElement('div');
-            newTextBlock.className = 'text-block';
-            newTextBlock.textContent = 'New text block added';
-            container.insertBefore(newTextBlock, container.firstChild);
-        }
+            fanContainer.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            });
 
-        function addButton() {
-            const container = document.querySelector('.container');
-            const newButton = document.createElement('button');
-            newButton.className = 'tg-button';
-            newButton.textContent = 'New Button';
-            container.insertBefore(newButton, container.firstChild);
+            // Prevent default touch behavior to avoid unwanted scrolling
+            document.body.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+            }, { passive: false });
         }
-
-        // Initialize
-        window.addEventListener('resize', updateSwipePosition);
     </script>
 </body>
 </html>
