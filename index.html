@@ -20,6 +20,8 @@
             width: 80vmin;
             height: 80vmin;
             position: relative;
+            margin: 0 auto; /* This will center it horizontally */
+
         }
         #background {
             width: 100%;
@@ -164,6 +166,10 @@
 <body>
     <div class="container">
        
+       
+        <button class="tg-button" onclick="addTextBlock()">Add Text Block</button>
+        <button class="tg-button" onclick="addButton()">Add Button</button>
+
         <div class="section-header">List</div>
         <div class="list-item">
             <div class="list-item-avatar"></div>
@@ -172,10 +178,6 @@
                 <div class="list-item-subtitle">Last seen recently</div>
             </div>
         </div>
-        <button class="tg-button" onclick="addTextBlock()">Add Text Block</button>
-        <button class="tg-button" onclick="addButton()">Add Button</button>
-
-
 
         <div id="fan-container">
             <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop2.png" alt="GPU Fan">
