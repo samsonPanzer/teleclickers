@@ -225,7 +225,7 @@
         <img id="fuelBack" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/fuelBack.png" alt="Fuel meter background">
         <img id="fuelTop" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/fuelTop.png" alt="Fuel meter needle">
     </div>
-    <div id="total wheels">
+    <!-- <div id="total wheels">
     <div class="list-item">
         <div class="list-item-avatar"></div>
         <div class="list-item-content">
@@ -233,17 +233,20 @@
             <div class="list-item-subtitle">Does not crack!</div>
         </div>
     </div>
-    </div>
+    </div> -->
 
-        <div class="section-header">Messages</div>
-        <div class="text-block" id="textBlock">
-            This is a sample text block that can contain any text content.
-        </div>
+       
     <div id="fan-container">
         <img id="fan" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop2.png" alt="GPU Fan">
         <img id="background" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png" alt="GPU Background">
     </div>
-    <div id="speedometer">Speed: 0 RPM</div>
+
+    <div class="section-header">Messages</div>
+    <div class="text-block" id="textBlock">
+        This is a sample text block that can contain any text content.
+    </div>
+
+    <!-- <div id="speedometer">Speed: 0 RPM</div> -->
     <div id="mobile-message">Mobile is more fun</div>
    
     
@@ -264,7 +267,7 @@
         const fan = document.getElementById('fan');
         const fanContainer = document.getElementById('fan-container');
         const mobileMessage = document.getElementById('mobile-message');
-        const speedometer = document.getElementById('speedometer');
+       // const speedometer = document.getElementById('speedometer');
         let rotation = 0;
         let spinning = false;
         let speed = 0;
@@ -294,7 +297,7 @@
 
                     // Update speedometer
                     const rpm = (Math.abs(speed) * 60 / 360).toFixed(3);
-                    speedometer.textContent = `Speed: ${rpm} RPM`;
+                  //  speedometer.textContent = `Speed: ${rpm} RPM`;
 
                     if (Math.abs(speed) > 0.1) {
                         fuelTank = fuelTank - (rpm/100)
