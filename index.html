@@ -247,8 +247,11 @@
                     speedometer.textContent = `Speed: ${rpm} RPM`;
 
                     if (Math.abs(speed) > 0.1) {
-                        fuelTank = fuelTank - (rpm/10)
-                updateFuel(fuelTank) 
+                        fuelTank = fuelTank - (rpm/100)
+                          updateFuel(fuelTank) 
+                          if(fuelTank <= 0){
+                            return
+                          }
                         requestAnimationFrame(spinFan);
                     } else {
                         spinning = false;
