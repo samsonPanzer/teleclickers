@@ -212,9 +212,11 @@
             <img id="speedTop" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/speedTop.png" alt="speed meter speedNeedle">
         </div>
         
-        <input type="range" min="0" max="150" value="0" id="speedInput">
-        <span id="speedValue">0%</span>
-
+       
+        <div class="meter-container">
+            <img id="fuelBack" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/fuelBack.png" alt="Fuel meter background">
+            <img id="fuelTop" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/fuelTop.png" alt="Fuel meter needle">
+        </div>
 
 
         <div class="section-header">Messages</div>
@@ -227,11 +229,11 @@
     </div>
     <div id="speedometer">Speed: 0 RPM</div>
     <div id="mobile-message">Mobile is more fun</div>
-    <div class="meter-container">
-        <img id="fuelBack" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/fuelBack.png" alt="Fuel meter background">
-        <img id="fuelTop" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/fuelTop.png" alt="Fuel meter needle">
-    </div>
+   
     
+
+    <input type="range" min="0" max="150" value="0" id="speedInput">
+    <span id="speedValue">0%</span>
     <input type="range" min="0" max="100" value="0" id="fuelInput">
     <span id="fuelValue">0%</span>
 
@@ -277,10 +279,10 @@
                     speedometer.textContent = `Speed: ${rpm} RPM`;
 
                     if (Math.abs(speed) > 0.1) {
-                        fuelTank = fuelTank - (rpm/10)
+                        fuelTank = fuelTank - (rpm/100)
                           updateFuel(fuelTank) 
                          
-                          updatespeed(rpm*10);
+                          updatespeed(rpm*15);
 
 
                         requestAnimationFrame(spinFan);
