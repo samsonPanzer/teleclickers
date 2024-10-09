@@ -268,6 +268,9 @@
             }
 
             function handleMove(x, y) {
+                if(fuelTank <= 0){
+                            return
+                          }
                 const rect = fanContainer.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
@@ -286,10 +289,7 @@
                 lastTouchY = y;
 
 
-                if(fuelTank <= 0){
-                            return
-                          }
-
+    
                 if (!spinning) {
                     spinning = true;
                     spinFan();
