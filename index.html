@@ -183,10 +183,40 @@
             transform-origin: center;
             transition: transform 0.3s ease;
         }
+
+
+        #speedBack {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #speedTop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: center;
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
+
+        <div class="meter-container">
+            <img id="speedBack" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/speedBack.png" alt="speed meter background">
+            <img id="speedTop" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/speedTop.png" alt="speed meter speedNeedle">
+        </div>
+        
+        <input type="range" min="0" max="150" value="0" id="speedInput">
+        <span id="speedValue">0%</span>
+
+
+
         <div class="section-header">Messages</div>
         <div class="text-block" id="textBlock">
             This is a sample text block that can contain any text content.
@@ -250,6 +280,9 @@
                         fuelTank = fuelTank - (rpm/10)
                           updateFuel(fuelTank) 
                          
+                          updatespeed(rpm*10);
+
+
                         requestAnimationFrame(spinFan);
                     } else {
                         spinning = false;
@@ -346,6 +379,37 @@
 
     // Initial call to set starting position
     updateFuel(0);
+</script>
+
+
+<script>
+    const speedNeedle = document.getElementById('speedTop');
+    const speedInput = document.getElementById('speedInput');
+    const speedValue = document.getElementById('speedValue');
+
+    function updatespeed(percentage) {
+        // Ensure the percentage is between 0 and 100
+        percentage = Math.max(0, Math.min(150, percentage));
+        
+        // Convert percentage to degrees
+        // Assuming 0% is -90 degrees (facing left) and 100% is 90 degrees (facing right)
+        const degrees = (percentage / 100) * 180 ;
+        
+        // Update speedNeedle rotation
+        speedNeedle.style.transform = `rotate(${degrees}deg)`;
+        
+        // Update display value
+        speedValue.textContent = `${percentage}%`;
+        speedInput.value = percentage;
+    }
+
+    // Add event listener to input range
+    speedInput.addEventListener('input', (e) => {
+        updatespeed(parseInt(e.target.value));
+    });
+
+    // Initial call to set starting position
+    updatespeed(0);
 </script>
 </body>
 </html>
