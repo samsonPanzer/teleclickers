@@ -5,6 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GPU Fan Spinner with Motion Blur and Speedometer</title>
     <style>
+        .odometer {
+          font-family: monospace;
+          font-size: 48px;
+          display: flex;
+          justify-content: center;
+          overflow: hidden;
+          background: #f0f0f0;
+          border-radius: 8px;
+          padding: 20px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .digit {
+          width: 40px;
+          height: 60px;
+          overflow: hidden;
+          position: relative;
+          margin: 0 2px;
+          background: white;
+          border-radius: 4px;
+        }
+        
+        .digit-strip {
+          position: absolute;
+          top: 0;
+          transition: top 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .digit-strip span {
+          display: block;
+          height: 60px;
+          line-height: 60px;
+          text-align: center;
+        }
+        
+        button {
+          display: block;
+          margin: 20px auto;
+          padding: 10px 20px;
+          font-size: 18px;
+          cursor: pointer;
+        }
+      </style>
+    <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
@@ -241,6 +285,26 @@
         <img id="background" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/main/images/fidgetTop.png" alt="GPU Background">
     </div>
 
+
+
+    <div class="odometer">
+        <div class="digit">
+          <div class="digit-strip"></div>
+        </div>
+        <div class="digit">
+          <div class="digit-strip"></div>
+        </div>
+        <div class="digit">
+          <div class="digit-strip"></div>
+        </div>
+        <div class="digit">
+          <div class="digit-strip"></div>
+        </div>
+      </div>
+      <button onclick="increment()">Increment</button>
+
+
+
     <div class="section-header">Messages</div>
     <div class="text-block" id="textBlock">
         This is a sample text block that can contain any text content.
@@ -262,7 +326,7 @@
     <script>
 
 
-       
+       let totalMilage = 0
 
         const fan = document.getElementById('fan');
         const fanContainer = document.getElementById('fan-container');
@@ -304,7 +368,11 @@
                           updateFuel(fuelTank) 
                          
                           updatespeed(rpm*15);
-
+                          totalMilage += rpm/10
+                          if(totalMilage > 1){
+                            increment()
+                            totalMilage = 0;
+                          }
 
                         requestAnimationFrame(spinFan);
                     } else {
@@ -437,5 +505,38 @@
     // Initial call to set starting position
    
 </script>
+
+
+<script>
+    let currentValue = 0;
+    const digits = document.querySelectorAll('.digit-strip');
+    
+    // Initialize digit strips
+    digits.forEach(digit => {
+      let html = '';
+      for (let i = 0; i <= 9; i++) {
+        html += `<span>${i}</span>`;
+      }
+      // Repeat the first digit to allow smooth transition from 9 to 0
+      html += `<span>0</span>`;
+      digit.innerHTML = html;
+    });
+
+    function updateDisplay(value) {
+      const padded = value.toString().padStart(4, '0');
+      digits.forEach((digit, index) => {
+        const number = parseInt(padded[index]);
+        digit.style.top = `${-number * 60}px`;
+      });
+    }
+
+    function increment() {
+      currentValue = (currentValue + 1) % 10000;
+      updateDisplay(currentValue);
+    }
+
+    // Initial display
+    updateDisplay(currentValue);
+  </script>
 </body>
 </html>
