@@ -207,6 +207,10 @@
 
 </div>
     <script>
+
+
+        let fuelTank = 100
+
         const fan = document.getElementById('fan');
         const fanContainer = document.getElementById('fan-container');
         const mobileMessage = document.getElementById('mobile-message');
@@ -275,7 +279,7 @@
 
                 speed = angleDiff * 2; // Increased speed multiplier
                 speed = Math.min(Math.max(speed, -60), 60); // Increased maximum speed
-
+                fuelTank = fuelTank - (speed/10)
                 lastTouchX = x;
                 lastTouchY = y;
 
@@ -283,6 +287,9 @@
                     spinning = true;
                     spinFan();
                 }
+
+                updateFuel(fuelTank) 
+
             }
 
             fanContainer.addEventListener('touchstart', (e) => {
