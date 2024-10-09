@@ -251,7 +251,7 @@
     <script>
 
 
-        let fuelTank = 200
+       
 
         const fan = document.getElementById('fan');
         const fanContainer = document.getElementById('fan-container');
@@ -364,13 +364,16 @@
     </script>
 
 <script>
+    let fuelTank = 200
+    let fullFuelTank = JSON.parse(JSON.stringify(fuelTank))
+
     const needle = document.getElementById('fuelTop');
   //  const fuelInput = document.getElementById('fuelInput');
   //  const fuelValue = document.getElementById('fuelValue');
 
     function updateFuel(percentage) {
         // Ensure the percentage is between 0 and 100
-        percentage = Math.max(0, Math.min(100, percentage));
+        percentage = Math.max(0, Math.min(fullFuelTank , percentage));
         
         // Convert percentage to degrees
         // Assuming 0% is -90 degrees (facing left) and 100% is 90 degrees (facing right)
@@ -385,12 +388,12 @@
     }
 
     // Add event listener to input range
-    fuelInput.addEventListener('input', (e) => {
-        updateFuel(parseInt(e.target.value));
-    });
+    // fuelInput.addEventListener('input', (e) => {
+    //     updateFuel(parseInt(e.target.value));
+    // });
 
     // Initial call to set starting position
-    updateFuel(0);
+    updateFuel(fuelTank);
 </script>
 
 
@@ -416,12 +419,12 @@
     }
 
     // Add event listener to input range
-    speedInput.addEventListener('input', (e) => {
-        updatespeed(parseInt(e.target.value));
-    });
+    // speedInput.addEventListener('input', (e) => {
+    //     updatespeed(parseInt(e.target.value));
+    // });
 
     // Initial call to set starting position
-    updatespeed(fuelTank);
+   
 </script>
 </body>
 </html>
