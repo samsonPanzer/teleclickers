@@ -247,6 +247,8 @@
                     speedometer.textContent = `Speed: ${rpm} RPM`;
 
                     if (Math.abs(speed) > 0.1) {
+                        fuelTank = fuelTank - (rpm/10)
+                updateFuel(fuelTank) 
                         requestAnimationFrame(spinFan);
                     } else {
                         spinning = false;
@@ -279,7 +281,6 @@
 
                 speed = angleDiff * 2; // Increased speed multiplier
                 speed = Math.min(Math.max(speed, -60), 60); // Increased maximum speed
-                fuelTank = fuelTank - (speed/10)
                 lastTouchX = x;
                 lastTouchY = y;
 
@@ -288,7 +289,7 @@
                     spinFan();
                 }
 
-                updateFuel(fuelTank) 
+                
 
             }
 
