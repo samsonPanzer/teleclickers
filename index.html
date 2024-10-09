@@ -225,7 +225,15 @@
         <img id="fuelBack" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/fuelBack.png" alt="Fuel meter background">
         <img id="fuelTop" src="https://raw.githubusercontent.com/samsonPanzer/teleclickers/refs/heads/main/images/fuelTop.png" alt="Fuel meter needle">
     </div>
-
+    <div id="total wheels">
+    <div class="list-item">
+        <div class="list-item-avatar"></div>
+        <div class="list-item-content">
+            <div class="list-item-title">Woodwheel</div>
+            <div class="list-item-subtitle">Does not crack!</div>
+        </div>
+    </div>
+    </div>
 
         <div class="section-header">Messages</div>
         <div class="text-block" id="textBlock">
@@ -364,7 +372,7 @@
     </script>
 
 <script>
-    let fuelTank = 200
+    let fuelTank = 100
     let fullFuelTank = JSON.parse(JSON.stringify(fuelTank))
 
     const needle = document.getElementById('fuelTop');
@@ -373,7 +381,7 @@
 
     function updateFuel(percentage) {
         // Ensure the percentage is between 0 and 100
-        percentage = Math.max(0, Math.min(fullFuelTank , percentage));
+        percentage = Math.max(0, Math.min(100 , percentage));
         
         // Convert percentage to degrees
         // Assuming 0% is -90 degrees (facing left) and 100% is 90 degrees (facing right)
