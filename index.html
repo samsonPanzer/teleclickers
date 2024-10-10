@@ -357,7 +357,7 @@
                     const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
                     fan.style.filter = `blur(${blurAmount}px)`;
                     
-                    speed *= 0.99; // Slower deceleration
+                    speed *= 0.8; // Slower deceleration
 
                     // Update speedometer
                     const rpm = (Math.abs(speed) * 60 / 360).toFixed(3);
