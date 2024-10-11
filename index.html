@@ -353,9 +353,8 @@
                     rotation += speed;
                     fan.style.transform = `rotate(${rotation}deg)`;
                     
-                    // Apply motion blur
-                    const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
-                    fan.style.filter = `blur(${blurAmount}px)`;
+                   
+                    
                     
 
                     if(speed > 0){
@@ -368,6 +367,13 @@
 
                     // Update speedometer
                     const rpm = (Math.abs(speed) * 60 / 360).toFixed(3);
+
+
+                    if(rpm > 5){
+                         // Apply motion blur
+                    const blurAmount = Math.abs(speed) * 0.2; // Adjust this multiplier to change blur intensity
+                    fan.style.filter = `blur(${blurAmount}px)`;
+                    }
                   //  speedometer.textContent = `Speed: ${rpm} RPM`;
 
                     if (Math.abs(speed) > 0.1) {
